@@ -19,12 +19,9 @@
     "Aquamarine",
     "Ashley Wave Trials",
     "Diabolic Clubstep",
-    "Avernus",
-    "Bonus Le",
+    "avernus",
     "Every End",
-    "Voltag",
     "Unpatchable V2",
-    "Silent Realistik",
     "Spectre",
     "Menace",
     "Abyss Of Darkness",
@@ -35,6 +32,9 @@
     "Tunnel Of Despair",
     "kyouki",
     "slaughterhouse",
+    "Silent Realistik",
+    "Bonus Le",
+    "Voltag",
     "Deimos",
     "kocmoc",
     "Based After Based",
@@ -664,6 +664,7 @@
     "cerebral_torment",
     "falling_maze"
 ]
+
 
 
 
