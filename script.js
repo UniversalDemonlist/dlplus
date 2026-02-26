@@ -61,8 +61,8 @@ async function loadDemonList() {
     .filter(Boolean);
 
   mainList = globalDemons.filter(d => d.position >= 1 && d.position <= 75);
-  extendedList = globalDemons.filter(d => d.position >= 76 && d.position <= 200);
-  legacyList = globalDemons.filter(d => d.position > 200);
+  extendedList = globalDemons.filter(d => d.position >= 76 && d.position <= 100);
+  legacyList = globalDemons.filter(d => d.position > 100);
 
   renderDemonCards();
   populateDropdowns();
@@ -180,8 +180,8 @@ function createDemonCard(demon) {
     ? demon.creators.join(", ")
     : demon.creators || "Unknown";
 
-  const score = demon.position <= 200 ? 350 / Math.sqrt(demon.position) : 0;
-  const posLabel = demon.position > 200 ? "Legacy" : "#" + demon.position;
+  const score = demon.position <= 100 ? 350 / Math.sqrt(demon.position) : 0;
+  const posLabel = demon.position > 100 ? "Legacy" : "#" + demon.position;
 
   info.innerHTML = `
     <h2>${posLabel} — ${demon.name}</h2>
@@ -212,8 +212,8 @@ function openDemonPage(demon) {
     ? demon.creators.join(", ")
     : demon.creators || "Unknown";
 
-  const score = demon.position <= 200 ? 350 / Math.sqrt(demon.position) : 0;
-  const posLabel = demon.position > 200 ? "Legacy" : "#" + demon.position;
+  const score = demon.position <= 100 ? 350 / Math.sqrt(demon.position) : 0;
+  const posLabel = demon.position > 100 ? "Legacy" : "#" + demon.position;
 
   const videoId = getYoutubeId(demon.verification);
   const iframeSrc = videoId ? "https://www.youtube.com/embed/" + videoId : "";
@@ -300,7 +300,7 @@ function loadLeaderboard() {
   });
 
   globalDemons.forEach(demon => {
-    if (demon.position > 200) return;
+    if (demon.position > 100) return;
 
     const baseScore = 350 / Math.sqrt(demon.position);
 
@@ -371,7 +371,7 @@ function openPlayerPage(playerName, scores) {
     demon.records.forEach(record => {
       if (record.user === playerName) {
         const card = createDemonCard(demon);
-        const baseScore = demon.position <= 200 ? 350 / Math.sqrt(demon.position) : 0;
+        const baseScore = demon.position <= 100 ? 350 / Math.sqrt(demon.position) : 0;
         const earned = record.percent === 100
           ? baseScore
           : baseScore * (record.percent / 100);
@@ -386,7 +386,7 @@ function openPlayerPage(playerName, scores) {
 
     if (demon.verifier === playerName) {
       const card = createDemonCard(demon);
-      const baseScore = demon.position <= 200 ? 350 / Math.sqrt(demon.position) : 0;
+      const baseScore = demon.position <= 100 ? 350 / Math.sqrt(demon.position) : 0;
 
       const info = card.querySelector(".demon-info");
       info.innerHTML += `<p><strong>Progress:</strong> 100% (Verifier)</p>`;
@@ -398,3 +398,4 @@ function openPlayerPage(playerName, scores) {
 
   container.appendChild(recordContainer);
 }
+
