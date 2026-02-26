@@ -1,0 +1,18 @@
+{
+    "id": 609629,
+    "name": "Sary Never Clear",
+    "author": "Optic Sunflow",
+    "creators": ["Optic Sunflow"],
+    "verifier": "Glow",
+    "verification": "https://youtu.be/Hpo77uVq75M?si=LPU92dAl3Kpx3gm3&t=726",
+    "percentToQualify": 72,
+    "password": "Not Copyable",
+    "records": [
+        {
+            "user": "UserInterface",
+            "link": "https://www.youtube.com/watch?v=Oaej5DMZj-w",
+            "percent": 100,
+            "hz": 360
+        }
+    ]
+}

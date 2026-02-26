@@ -1,0 +1,18 @@
+{
+    "id": 73011766,
+    "name": "Eternal Night",
+    "author": "Electro",
+    "creators": ["Electro"],
+    "verifier": "PowerGreen",
+    "verification": "https://www.youtube.com/watch?v=1Aiiv7NkY8s",
+    "percentToQualify": 84,
+    "password": "Not Copyable",
+    "records": [
+        {
+            "user": "UserInterface",
+            "link": "https://www.youtube.com/watch?v=1qq91peMfd8",
+            "percent": 100,
+            "hz": 360
+        }
+    ]
+}
