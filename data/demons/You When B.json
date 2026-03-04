@@ -3,15 +3,15 @@
     "name": "You When Bee Crusher",
     "author": "Akunakunn",
     "creators": ["Akunakunn"],
-    "verifier": "FireXY,DraconXY",
+    "verifier": "FireXY",
     "verification": "https://www.youtube.com/watch?v=qTgH6QiRePQ",
     "percentToQualify": 57,
     "password": "Not Copyable",
     "records": [
         {
-            "user": "Not beaten yet",
-            "link": "https://www.youtube.com/watch?v=wZwCXjVdqz0",
-            "percent": 1,
+            "user": "DraconYX",
+            "link": "https://www.youtube.com/watch?v=qTgH6QiRePQ",
+            "percent": 100,
             "hz": 360
         }
     ]
