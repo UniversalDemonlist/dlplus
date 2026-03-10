@@ -7,12 +7,13 @@
     "verification": "https://youtu.be/xhbnMxADaSU",
     "percentToQualify": 57,
     "password": "Not Copyable",
+    "thumbnail": "https://img.youtube.com/vi/2VNpOFyA_bM/maxresdefault.jpg",
     "records": [
         {
-            "user": "Not beaten yet",
-            "link": "https://www.youtube.com/watch?v=wZwCXjVdqz0",
-            "percent": 1,
-            "hz": 360
+            "user": "PowerGreen",
+            "link": "https://www.youtube.com/watch?v=2VNpOFyA_bM",
+            "percent": 100,
+            "hz": 60
         }
     ]
 }
