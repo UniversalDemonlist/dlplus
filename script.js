@@ -240,9 +240,12 @@ function openDemonPage(demon) {
 
   const finalRecords = recordList || "<p>No records yet.</p>";
 
-  container.innerHTML = `
+container.innerHTML = `
     <div class="demon-page-header">
       <h2>${posLabel} — ${demon.name}</h2>
+
+      ${demon.description ? `<p class="demon-description">${demon.description}</p>` : ""}
+
       <div class="demon-page-meta">
         <p><strong>Author:</strong> ${demon.author}</p>
         <p><strong>Creators:</strong> ${creators}</p>
@@ -251,10 +254,12 @@ function openDemonPage(demon) {
         <p><strong>Score Value:</strong> ${score.toFixed(2)}</p>
       </div>
     </div>
+
     ${videoBlock}
+
     <h3>Records</h3>
     ${finalRecords}
-  `;
+`;
 
   document.querySelectorAll(".tab-btn").forEach(b => b.classList.remove("active"));
   document.querySelectorAll(".tab-content").forEach(c => c.classList.remove("active"));
