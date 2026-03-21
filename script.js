@@ -227,14 +227,14 @@ const validRecords = demon.records.map(r => {
     return {
       user: r,
       percent: 100,
-      link: "https://example.com/placeholder",
+      link: "https://static.wikia.nocookie.net/baldis-basics-in-education-and-learning/images/8/8e/TITLE_BG.png/revision/latest/scale-to-width-down/185?cb=20190105013932",
       hz: null
     };
   }
   return {
     user: r.user,
     percent: r.percent || 100,
-    link: r.link || "",
+    link: r.link || "https://static.wikia.nocookie.net/baldis-basics-in-education-and-learning/images/8/8e/TITLE_BG.png/revision/latest/scale-to-width-down/185?cb=20190105013932",
     hz: r.hz || null
   };
 }).filter(r =>
