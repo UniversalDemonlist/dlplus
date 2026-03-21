@@ -285,3 +285,11 @@ body.light .tab-btn.active {
   color: #fff;
   border-color: #3f6dff;
 }
+
+.tabs-logo {
+  height: 26px;
+  width: 26px;
+  margin-right: 10px;
+  margin-left: 4px;
+  object-fit: contain;
+}
