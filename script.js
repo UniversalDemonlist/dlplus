@@ -222,26 +222,26 @@ function openDemonPage(demon) {
     ? `<div class="demon-page-video"><iframe src="${iframeSrc}" allowfullscreen></iframe></div>`
     : `<img src="${thumb}" class="demon-page-video">`;
 
-const validRecords = demon.records.map(r => {
-  if (typeof r === "string") {
+  const validRecords = demon.records.map(r => {
+    if (typeof r === "string") {
+      return {
+        user: r,
+        percent: 100,
+        link: "https://static.wikia.nocookie.net/baldis-basics-in-education-and-learning/images/8/8e/TITLE_BG.png/revision/latest/scale-to-width-down/185?cb=20190105013932",
+        hz: null
+      };
+    }
     return {
-      user: r,
-      percent: 100,
-      link: "https://static.wikia.nocookie.net/baldis-basics-in-education-and-learning/images/8/8e/TITLE_BG.png/revision/latest/scale-to-width-down/185?cb=20190105013932",
-      hz: null
+      user: r.user,
+      percent: r.percent || 100,
+      link: r.link || "",
+      hz: r.hz || null
     };
-  }
-  return {
-    user: r.user,
-    percent: r.percent || 100,
-    link: r.link || "https://static.wikia.nocookie.net/baldis-basics-in-education-and-learning/images/8/8e/TITLE_BG.png/revision/latest/scale-to-width-down/185?cb=20190105013932",
-    hz: r.hz || null
-  };
-}).filter(r =>
-  r.user &&
-  r.user !== "Not beaten yet" &&
-  !bannedPlayers.includes(r.user)
-);
+  }).filter(r =>
+    r.user &&
+    r.user !== "Not beaten yet" &&
+    !bannedPlayers.includes(r.user)
+  );
 
   const recordList = validRecords
     .sort((a, b) => (b.percent || 0) - (a.percent || 0))
@@ -255,7 +255,7 @@ const validRecords = demon.records.map(r => {
 
   const finalRecords = recordList || "<p>No records yet.</p>";
 
-container.innerHTML = `
+  container.innerHTML = `
     <div class="demon-page-header">
       <h2>${posLabel} — ${demon.name}</h2>
 
@@ -274,7 +274,7 @@ container.innerHTML = `
 
     <h3>Records</h3>
     ${finalRecords}
-`;
+  `;
 
   document.querySelectorAll(".tab-btn").forEach(b => b.classList.remove("active"));
   document.querySelectorAll(".tab-content").forEach(c => c.classList.remove("active"));
@@ -303,7 +303,11 @@ function loadLeaderboard() {
 
   globalDemons.forEach(demon => {
     if (demon.verifier && !bannedPlayers.includes(demon.verifier)) playerSet.add(demon.verifier);
-    demon.records.forEach(record => {
+    demon.records.forEach(r => {
+      const record = typeof r === "string"
+        ? { user: r, percent: 100, link: "", hz: null }
+        : { user: r.user, percent: r.percent || 100, link: r.link || "", hz: r.hz || null };
+
       if (
         record.user &&
         record.user !== "Not beaten yet" &&
@@ -325,7 +329,11 @@ function loadLeaderboard() {
 
     const baseScore = 350 / Math.sqrt(demon.position);
 
-    demon.records.forEach(record => {
+    demon.records.forEach(r => {
+      const record = typeof r === "string"
+        ? { user: r, percent: 100, link: "", hz: null }
+        : { user: r.user, percent: r.percent || 100, link: r.link || "", hz: r.hz || null };
+
       const p = record.user;
       const progress = Number(record.percent);
       if (!p || p === "Not beaten yet" || bannedPlayers.includes(p)) return;
@@ -389,7 +397,11 @@ function openPlayerPage(playerName, scores) {
   recordContainer.className = "player-records";
 
   globalDemons.forEach(demon => {
-    demon.records.forEach(record => {
+    demon.records.forEach(r => {
+      const record = typeof r === "string"
+        ? { user: r, percent: 100, link: "", hz: null }
+        : { user: r.user, percent: r.percent || 100, link: r.link || "", hz: r.hz || null };
+
       if (record.user === playerName) {
         const card = createDemonCard(demon);
         const baseScore = demon.position <= 100 ? 350 / Math.sqrt(demon.position) : 0;
@@ -419,4 +431,3 @@ function openPlayerPage(playerName, scores) {
 
   container.appendChild(recordContainer);
 }
-
