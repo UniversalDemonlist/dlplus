@@ -132,18 +132,19 @@ body {
 .demon-card {
   display: flex;
   gap: 20px;
-  background: #0a0c14;
+  background: #1b1f33;
   border-radius: 10px;
   padding: 20px;
   cursor: pointer;
-  border: 1px solid #1a1d2e;
+  border: 1px solid #3a4060;
   transition: 0.2s ease;
-  box-shadow: 0 4px 12px rgba(0,0,0,0.4);
+  box-shadow: 0 4px 10px rgba(0,0,0,0.35);
 }
 
 .demon-card:hover {
   transform: translateY(-3px);
-  border-color: #2b5cff;
+  background: #232842;
+  border-color: #4d5680;
 }
 
 .demon-card img {
