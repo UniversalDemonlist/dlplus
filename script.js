@@ -264,6 +264,7 @@ container.innerHTML = `
   document.querySelectorAll(".tab-btn").forEach(b => b.classList.remove("active"));
   document.querySelectorAll(".tab-content").forEach(c => c.classList.remove("active"));
   document.getElementById("demon-page").classList.add("active");
+  window.scrollTo({ top: 0, behavior: "smooth" });
 }
 
 function setupSearchBar() {
