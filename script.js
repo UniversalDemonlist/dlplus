@@ -222,11 +222,26 @@ function openDemonPage(demon) {
     ? `<div class="demon-page-video"><iframe src="${iframeSrc}" allowfullscreen></iframe></div>`
     : `<img src="${thumb}" class="demon-page-video">`;
 
-  const validRecords = demon.records.filter(r =>
-    r.user &&
-    r.user !== "Not beaten yet" &&
-    !bannedPlayers.includes(r.user)
-  );
+const validRecords = demon.records.map(r => {
+  if (typeof r === "string") {
+    return {
+      user: r,
+      percent: 100,
+      link: "https://example.com/placeholder",
+      hz: null
+    };
+  }
+  return {
+    user: r.user,
+    percent: r.percent || 100,
+    link: r.link || "",
+    hz: r.hz || null
+  };
+}).filter(r =>
+  r.user &&
+  r.user !== "Not beaten yet" &&
+  !bannedPlayers.includes(r.user)
+);
 
   const recordList = validRecords
     .sort((a, b) => (b.percent || 0) - (a.percent || 0))
