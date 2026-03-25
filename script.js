@@ -47,6 +47,16 @@ function setupThemeToggle() {
   });
 }
 
+function showInitialPlaceholders() {
+  const container = document.getElementById("demon-container");
+  if (!container) return;
+  container.innerHTML = "";
+  for (let i = 0; i < 6; i++) {
+    container.appendChild(createPlaceholderCard());
+  }
+}
+
+
 async function loadDemonList() {
   const list = await fetch("data/list.json").then(r => r.json());
   const demonFiles = await Promise.all(
