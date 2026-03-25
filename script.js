@@ -7,6 +7,7 @@ let bannedPlayers = [];
 document.addEventListener("DOMContentLoaded", () => {
   setupTabs();
   setupThemeToggle();
+  showInitialPlaceholders();
   loadEverything();
   setupSearchBar();
   setupDropdownSelects();
