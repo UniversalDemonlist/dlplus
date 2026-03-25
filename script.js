@@ -12,6 +12,7 @@ document.addEventListener("DOMContentLoaded", () => {
   setupDropdownSelects();
 });
 
+
 async function loadEverything() {
   bannedPlayers = await fetch("data/banned.json").then(r => r.json()).catch(() => []);
   await loadDemonList();
