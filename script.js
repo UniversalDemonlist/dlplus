@@ -200,6 +200,29 @@ function createDemonCard(demon) {
   return card;
 }
 
+function createPlaceholderCard() {
+  const card = document.createElement("div");
+  card.className = "placeholder-card";
+
+  const thumb = document.createElement("div");
+  thumb.className = "placeholder-thumb";
+
+  const info = document.createElement("div");
+  info.className = "placeholder-info";
+
+  for (let i = 0; i < 5; i++) {
+    const line = document.createElement("div");
+    line.className = "placeholder-line";
+    info.appendChild(line);
+  }
+
+  card.appendChild(thumb);
+  card.appendChild(info);
+
+  return card;
+}
+
+
 function openDemonPage(demon) {
   stopAllVideos();
   const container = document.getElementById("demon-page-container");
