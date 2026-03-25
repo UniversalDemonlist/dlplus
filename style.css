@@ -294,3 +294,42 @@ body.light .tab-btn.active {
   margin-left: 4px;
   object-fit: contain;
 }
+
+.placeholder-card {
+  display: flex;
+  gap: 20px;
+  background: #11131f;
+  border-radius: 10px;
+  padding: 20px;
+  border: 1px solid #1f2335;
+  height: 170px;
+  box-shadow: 0 4px 10px rgba(0,0,0,0.35);
+  animation: placeholderGlow 1.8s ease-in-out infinite;
+}
+
+.placeholder-thumb {
+  width: 300px;
+  height: 170px;
+  border-radius: 8px;
+  background: #1a1d2e;
+}
+
+.placeholder-info {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.placeholder-line {
+  height: 16px;
+  width: 70%;
+  background: #1a1d2e;
+  border-radius: 4px;
+}
+
+@keyframes placeholderGlow {
+  0% { background: #0f1120; }
+  50% { background: #1a1d2e; }
+  100% { background: #0f1120; }
+}
