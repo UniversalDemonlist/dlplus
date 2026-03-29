@@ -3,16 +3,17 @@
     "name": "Blue Noah",
     "author": "Squeeg",
     "creators": ["Squeeg"],
-    "verifier": "Squeeg",
-    "verification": "https://youtu.be/NEYJNH9OvX0",
+    "verifier": "Kermitgd",
+    "verification": "https://www.youtube.com/watch?v=_FYebeIb-Zk",
     "percentToQualify": 57,
     "password": "Not Copyable",
     "description": "The hardest spam challenge, which is only possible with rake clicking.",
+    "thumbnail": "https://img.youtube.com/vi/NEYJNH9OvX0/maxresdefault.jpg",
     "records": [
         {
-            "user": "Kermitgd",
+            "user": "Not beaten yet",
             "link": "https://www.youtube.com/watch?v=_FYebeIb-Zk",
-            "percent": 100,
+            "percent": 1,
             "hz": 360
         }
     ]
