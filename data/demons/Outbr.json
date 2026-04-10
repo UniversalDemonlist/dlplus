@@ -1,0 +1,18 @@
+{
+    "id": 88201288,
+    "name": "Outbreak Perfected",
+    "author": "Squeeg",
+    "creators": ["Squeeg"],
+    "verifier": "G1rcy",
+    "percentToQualify": 57,
+    "password": "Not Copyable",
+    "thumbnail": "https://img.youtube.com/vi/7ewj_I-P5Pc/maxresdefault.jpg",
+    "records": [
+        {
+            "user": "Not beaten yet",
+            "link": "https://www.youtube.com/watch?v=wZwCXjVdqz0",
+            "percent": 1,
+            "hz": 360
+        }
+    ]
+}
