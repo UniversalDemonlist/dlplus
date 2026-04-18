@@ -479,3 +479,12 @@ function openPlayerPage(playerName, scores) {
 
   container.appendChild(recordContainer);
 }
+
+function showInitialPlaceholders() {
+  const container = document.getElementById("demon-container");
+  container.innerHTML = "";
+  for (let i = 0; i < 6; i++) {
+    container.appendChild(createPlaceholderCard());
+  }
+}
+
