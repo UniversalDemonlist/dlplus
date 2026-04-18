@@ -1,7 +1,10 @@
 body {
   margin: 0;
   font-family: "Montserrat", sans-serif;
-  background: linear-gradient(180deg, #02030a, #000000);
+  background-image: url("Background.png");
+  background-size: cover;
+  background-position: center;
+  background-attachment: fixed;
   color: #f5f5f5;
   padding-top: 60px;
 }
@@ -79,7 +82,7 @@ body {
 
 .panel {
   padding: 16px;
-  background: rgba(10, 12, 20, 0.95);
+  background: rgba(10, 12, 20, 0.92);
   border-radius: 8px;
   border: 1px solid #151827;
 }
@@ -127,29 +130,31 @@ body {
   display: flex;
   flex-direction: column;
   gap: 16px;
+  padding: 20px;
 }
 
 .demon-card {
   display: flex;
-  gap: 20px;
-  background: #1b1f33;
+  gap: 14px;
+  background: rgba(27, 31, 51, 0.92);
   border-radius: 10px;
-  padding: 20px;
+  padding: 14px;
   cursor: pointer;
   border: 1px solid #3a4060;
   transition: 0.2s ease;
   box-shadow: 0 4px 10px rgba(0,0,0,0.35);
+  backdrop-filter: blur(6px);
 }
 
 .demon-card:hover {
   transform: translateY(-3px);
-  background: #232842;
+  background: rgba(35, 40, 66, 0.92);
   border-color: #4d5680;
 }
 
 .demon-card img {
-  width: 300px;
-  height: 170px;
+  width: 240px;
+  height: 140px;
   object-fit: cover;
   border-radius: 8px;
 }
@@ -167,11 +172,12 @@ body {
 #demon-page-container {
   max-width: 900px;
   margin: 0 auto;
-  background: #0a0c14;
+  background: rgba(10, 12, 20, 0.92);
   border-radius: 10px;
   padding: 20px;
   border: 1px solid #1a1d2e;
   box-shadow: 0 4px 16px rgba(0,0,0,0.45);
+  backdrop-filter: blur(6px);
 }
 
 .demon-page-video {
@@ -192,11 +198,12 @@ body {
 #leaderboard-container {
   max-width: 800px;
   margin: 0 auto;
-  background: #0a0c14;
+  background: rgba(10, 12, 20, 0.92);
   border-radius: 10px;
   padding: 20px;
   border: 1px solid #1a1d2e;
   box-shadow: 0 4px 16px rgba(0,0,0,0.45);
+  backdrop-filter: blur(6px);
 }
 
 .leaderboard-row {
@@ -235,81 +242,22 @@ body {
   margin: 6px 0 14px 0;
 }
 
-body.light {
-  background: #f5f5f5;
-  color: #111;
-}
-
-body.light .tabs {
-  background: #ffffff;
-  border-bottom-color: #ddd;
-}
-
-body.light .panel,
-body.light #demon-page-container,
-body.light #leaderboard-container,
-body.light .demon-card,
-body.light .dropdown-group select {
-  background: #ffffff;
-  border-color: #ddd;
-  color: #111;
-}
-
-body.light #search-bar {
-  background: #ffffff;
-  border-color: #ccc;
-  color: #111;
-}
-
-body.light .leaderboard-row {
-  border-bottom-color: #eee;
-}
-
-body.light .tab-btn,
-body.light .filter-btn,
-body.light .submit-btn {
-  background: linear-gradient(135deg, #e6e6e6, #ffffff);
-  color: #111;
-  border: 1px solid #ccc;
-  box-shadow: 0 2px 6px rgba(0,0,0,0.1);
-}
-
-body.light .tab-btn:hover,
-body.light .filter-btn:hover,
-body.light .submit-btn:hover {
-  background: linear-gradient(135deg, #2b5cff, #3f6dff);
-  color: #fff;
-}
-
-body.light .tab-btn.active {
-  background: linear-gradient(135deg, #2b5cff, #3f6dff);
-  color: #fff;
-  border-color: #3f6dff;
-}
-
-.tabs-logo {
-  height: 26px;
-  width: 26px;
-  margin-right: 10px;
-  margin-left: 4px;
-  object-fit: contain;
-}
-
 .placeholder-card {
   display: flex;
-  gap: 20px;
-  background: #11131f;
+  gap: 14px;
+  background: rgba(17, 19, 31, 0.92);
   border-radius: 10px;
-  padding: 20px;
+  padding: 14px;
   border: 1px solid #1f2335;
-  height: 170px;
+  height: 140px;
   box-shadow: 0 4px 10px rgba(0,0,0,0.35);
   animation: placeholderGlow 1.8s ease-in-out infinite;
+  backdrop-filter: blur(6px);
 }
 
 .placeholder-thumb {
-  width: 300px;
-  height: 170px;
+  width: 240px;
+  height: 140px;
   border-radius: 8px;
   background: #1a1d2e;
 }
@@ -332,4 +280,29 @@ body.light .tab-btn.active {
   0% { background: #0f1120; }
   50% { background: #1a1d2e; }
   100% { background: #0f1120; }
+}
+
+@media (max-width: 700px) {
+  .demon-card {
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    padding: 12px;
+  }
+
+  .demon-card img {
+    width: 100%;
+    height: 220px;
+  }
+
+  .placeholder-card {
+    flex-direction: column;
+    height: auto;
+    padding: 12px;
+  }
+
+  .placeholder-thumb {
+    width: 100%;
+    height: 220px;
+  }
 }
