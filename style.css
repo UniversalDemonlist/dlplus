@@ -1,7 +1,7 @@
 body {
   margin: 0;
   font-family: "Montserrat", sans-serif;
-  background-image: url("your-background-image.jpg");
+  background-image: url("Background.png");
   background-size: cover;
   background-position: center;
   background-attachment: fixed;
@@ -10,7 +10,7 @@ body {
 }
 
 body.dark {
-  background: #000;
+  background: #0a0a0a;
   background-image: none;
   color: #f5f5f5;
 }
@@ -22,31 +22,31 @@ body.dark {
   background: #151827;
   color: #f5f5f5;
   border: none;
-  padding: 4px 8px;
+  padding: 6px 12px;
   cursor: pointer;
   border-radius: 4px;
-  font-size: 11px;
+  font-size: 12px;
   z-index: 100;
 }
 
 .tabs {
   display: flex;
-  gap: 4px;
-  padding: 3px 6px;
+  gap: 6px;
+  padding: 6px 10px;
   background: #0b0d14;
   border-bottom: 1px solid #222633;
   position: fixed;
   top: 0;
   width: 100%;
-  height: 28px;
+  height: 34px;
   align-items: center;
   z-index: 50;
 }
 
 .tab-logo,
 .tabs-logo {
-  height: 12px;
-  width: 12px;
+  height: 14px;
+  width: 14px;
   margin-right: 4px;
   object-fit: contain;
 }
@@ -57,10 +57,10 @@ body.dark {
   background: linear-gradient(135deg, #1a1d2e, #2b2f47);
   color: #f5f5f5;
   border: 1px solid #2d3350;
-  padding: 4px 8px;
+  padding: 7px 14px;
   cursor: pointer;
   border-radius: 6px;
-  font-size: 11px;
+  font-size: 12px;
   font-weight: 500;
   transition: 0.25s ease;
 }
@@ -95,17 +95,18 @@ body.dark {
 
 #search-bar {
   width: 100%;
-  padding: 6px 10px;
-  margin-bottom: 10px;
+  padding: 8px 12px;
+  margin-bottom: 12px;
   border-radius: 4px;
   border: 1px solid #222633;
-  background: rgba(0,0,0,0.15);
-  color: inherit;
+  background: #ffffffee;
+  color: #111;
   font-size: 14px;
 }
 
 body.dark #search-bar {
-  background: rgba(255,255,255,0.08);
+  background: #1a1a1a;
+  color: #f5f5f5;
   border-color: #444;
 }
 
@@ -129,16 +130,17 @@ body.dark #search-bar {
 }
 
 .dropdown-group select {
-  padding: 5px 8px;
+  padding: 6px 10px;
   border-radius: 4px;
   border: 1px solid #222633;
-  background: rgba(0,0,0,0.15);
-  color: inherit;
+  background: #ffffffee;
+  color: #111;
   font-size: 13px;
 }
 
 body.dark .dropdown-group select {
-  background: rgba(255,255,255,0.08);
+  background: #1a1a1a;
+  color: #f5f5f5;
   border-color: #444;
 }
 
@@ -150,10 +152,11 @@ body.dark .dropdown-group select {
   padding: 0;
 }
 
-.demon-card {
+.demon-card,
+.player-card {
   display: flex;
   gap: 20px;
-  background: rgba(255,255,255,0.9);
+  background: rgba(255,255,255,0.92);
   border-radius: 10px;
   padding: 20px;
   cursor: pointer;
@@ -166,17 +169,20 @@ body.dark .dropdown-group select {
   overflow: hidden;
 }
 
-body.dark .demon-card {
-  background: rgba(25,25,25,0.95);
+body.dark .demon-card,
+body.dark .player-card {
+  background: rgba(30,30,30,0.95);
   border-color: #333;
   box-shadow: 0 4px 12px rgba(0,0,0,0.6);
 }
 
-.demon-card:hover {
+.demon-card:hover,
+.player-card:hover {
   transform: translateY(-3px);
 }
 
-.demon-card img {
+.demon-card img,
+.player-card img {
   width: 300px;
   height: 170px;
   object-fit: cover;
@@ -184,24 +190,28 @@ body.dark .demon-card {
   flex-shrink: 0;
 }
 
-.demon-info {
+.demon-info,
+.player-info {
   overflow: hidden;
 }
 
-.demon-info h2 {
+.demon-info h2,
+.player-info h2 {
   margin: 0 0 4px 0;
   font-size: 18px;
 }
 
-.demon-info p {
+.demon-info p,
+.player-info p {
   margin: 3px 0;
   font-size: 14px;
 }
 
-.placeholder-card {
+.placeholder-card,
+.placeholder-player {
   display: flex;
   gap: 20px;
-  background: rgba(255,255,255,0.9);
+  background: rgba(255,255,255,0.92);
   border-radius: 10px;
   padding: 20px;
   border: 1px solid #ccc;
@@ -212,8 +222,9 @@ body.dark .demon-card {
   animation: placeholderGlow 1.8s ease-in-out infinite;
 }
 
-body.dark .placeholder-card {
-  background: rgba(25,25,25,0.95);
+body.dark .placeholder-card,
+body.dark .placeholder-player {
+  background: rgba(30,30,30,0.95);
   border-color: #333;
 }
 
@@ -245,8 +256,17 @@ body.dark .placeholder-card {
   100% { opacity: 0.7; }
 }
 
+#leaderboard-container {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  background: transparent;
+  padding: 0;
+}
+
 @media (max-width: 700px) {
-  .demon-card {
+  .demon-card,
+  .player-card {
     flex-direction: column;
     align-items: center;
     text-align: center;
@@ -255,12 +275,14 @@ body.dark .placeholder-card {
     width: 100%;
   }
 
-  .demon-card img {
+  .demon-card img,
+  .player-card img {
     width: 100%;
     height: 220px;
   }
 
-  .placeholder-card {
+  .placeholder-card,
+  .placeholder-player {
     flex-direction: column;
     height: auto;
     width: 100%;
