@@ -23,8 +23,11 @@ function setupThemeToggle() {
 }
 
 async function loadEverything() {
-  bannedPlayers = await fetch("data/banned.json").then(r => r.json()).catch(() => []);
-  await loadDemonList();
+  showInitialPlaceholders();
+  setTimeout(async () => {
+    bannedPlayers = await fetch("data/banned.json").then(r => r.json()).catch(() => []);
+    await loadDemonList();
+  }, 200);
 }
 
 function stopAllVideos() {
