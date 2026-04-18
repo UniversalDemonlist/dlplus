@@ -1,8 +1,11 @@
+document.body.classList.add("dark");
+
 let globalDemons = [];
 let mainList = [];
 let extendedList = [];
 let legacyList = [];
 let bannedPlayers = [];
+window._leaderboardScores = {};
 
 document.addEventListener("DOMContentLoaded", () => {
   setupTabs();
@@ -35,12 +38,15 @@ function stopAllVideos() {
 function setupTabs() {
   const buttons = document.querySelectorAll(".tab-btn");
   const contents = document.querySelectorAll(".tab-content");
+
   buttons.forEach(btn => {
     btn.addEventListener("click", () => {
       stopAllVideos();
       const tab = btn.getAttribute("data-tab");
+
       buttons.forEach(b => b.classList.remove("active"));
       contents.forEach(c => c.classList.remove("active"));
+
       btn.classList.add("active");
       document.getElementById(tab).classList.add("active");
     });
@@ -61,8 +67,8 @@ async function loadDemonList() {
     .map((d, i) => (d ? { ...d, position: i + 1 } : null))
     .filter(Boolean);
 
-  mainList = globalDemons.filter(d => d.position >= 1 && d.position <= 75);
-  extendedList = globalDemons.filter(d => d.position >= 76 && d.position <= 150);
+  mainList = globalDemons.filter(d => d.position <= 75);
+  extendedList = globalDemons.filter(d => d.position > 75 && d.position <= 150);
   legacyList = globalDemons.filter(d => d.position > 150);
 
   renderDemonCards();
@@ -75,9 +81,7 @@ function renderDemonCards(listOverride) {
   const container = document.getElementById("demon-container");
   container.innerHTML = "";
 
-  for (let i = 0; i < 6; i++) {
-    container.appendChild(createPlaceholderCard());
-  }
+  for (let i = 0; i < 6; i++) container.appendChild(createPlaceholderCard());
 
   setTimeout(() => {
     const list = listOverride || globalDemons.filter(d => d.position <= 150);
@@ -91,74 +95,38 @@ function populateDropdowns() {
   const extSelect = document.getElementById("select-extended");
   const legacySelect = document.getElementById("select-legacy");
 
-  if (mainSelect) {
-    mainSelect.innerHTML = '<option value="">Select a demon</option>';
-    mainList.forEach(d => {
+  function fill(select, list) {
+    if (!select) return;
+    select.innerHTML = '<option value="">Select a demon</option>';
+    list.forEach(d => {
       const opt = document.createElement("option");
       opt.value = d.position;
-      opt.textContent = "#" + d.position + " — " + d.name;
-      mainSelect.appendChild(opt);
+      opt.textContent = `#${d.position} — ${d.name}`;
+      select.appendChild(opt);
     });
   }
 
-  if (extSelect) {
-    extSelect.innerHTML = '<option value="">Select a demon</option>';
-    extendedList.forEach(d => {
-      const opt = document.createElement("option");
-      opt.value = d.position;
-      opt.textContent = "#" + d.position + " — " + d.name;
-      extSelect.appendChild(opt);
-    });
-  }
-
-  if (legacySelect) {
-    legacySelect.innerHTML = '<option value="">Select a demon</option>';
-    legacyList.forEach(d => {
-      const opt = document.createElement("option");
-      opt.value = d.position;
-      opt.textContent = "#" + d.position + " — " + d.name;
-      legacySelect.appendChild(opt);
-    });
-  }
+  fill(mainSelect, mainList);
+  fill(extSelect, extendedList);
+  fill(legacySelect, legacyList);
 }
 
 function setupDropdownSelects() {
-  const mainSelect = document.getElementById("select-main");
-  const extSelect = document.getElementById("select-extended");
-  const legacySelect = document.getElementById("select-legacy");
-
-  if (mainSelect) {
-    mainSelect.addEventListener("change", () => {
+  function attach(select, list) {
+    if (!select) return;
+    select.addEventListener("change", () => {
       stopAllVideos();
-      const pos = Number(mainSelect.value);
+      const pos = Number(select.value);
       if (!pos) return;
-      const demon = mainList.find(d => d.position === pos);
+      const demon = list.find(d => d.position === pos);
       if (demon) openDemonPage(demon);
-      mainSelect.value = "";
+      select.value = "";
     });
   }
 
-  if (extSelect) {
-    extSelect.addEventListener("change", () => {
-      stopAllVideos();
-      const pos = Number(extSelect.value);
-      if (!pos) return;
-      const demon = extendedList.find(d => d.position === pos);
-      if (demon) openDemonPage(demon);
-      extSelect.value = "";
-    });
-  }
-
-  if (legacySelect) {
-    legacySelect.addEventListener("change", () => {
-      stopAllVideos();
-      const pos = Number(legacySelect.value);
-      if (!pos) return;
-      const demon = legacyList.find(d => d.position === pos);
-      if (demon) openDemonPage(demon);
-      legacySelect.value = "";
-    });
-  }
+  attach(document.getElementById("select-main"), mainList);
+  attach(document.getElementById("select-extended"), extendedList);
+  attach(document.getElementById("select-legacy"), legacyList);
 }
 
 function getYoutubeId(url) {
@@ -169,8 +137,7 @@ function getYoutubeId(url) {
 
 function getYoutubeThumbnail(url) {
   const id = getYoutubeId(url);
-  if (!id) return "";
-  return "https://i.ytimg.com/vi/" + id + "/hqdefault.jpg";
+  return id ? `https://i.ytimg.com/vi/${id}/hqdefault.jpg` : "";
 }
 
 function getTier(pos) {
@@ -187,9 +154,10 @@ function createDemonCard(demon) {
   card.className = "demon-card";
 
   const img = document.createElement("img");
-  const customThumb = demon.thumbnail && String(demon.thumbnail).trim();
-  const verificationThumb = getYoutubeThumbnail(demon.verification);
-  img.src = customThumb || verificationThumb || "https://via.placeholder.com/300x170?text=No+Preview";
+  img.src =
+    demon.thumbnail?.trim() ||
+    getYoutubeThumbnail(demon.verification) ||
+    "https://via.placeholder.com/300x170?text=No+Preview";
 
   const info = document.createElement("div");
   info.className = "demon-info";
@@ -205,7 +173,7 @@ function createDemonCard(demon) {
     <p><strong>Author:</strong> ${demon.author}</p>
     <p><strong>Creators:</strong> ${creators}</p>
     <p><strong>Verifier:</strong> ${demon.verifier}</p>
-    ${demon.position <= 150 ? `<p><strong>GDDL Tier:</strong> ${getTier(demon.position)}</p>` : ""}
+    <p><strong>GDDL Tier:</strong> ${getTier(demon.position)}</p>
     <p><strong>Score Value:</strong> ${score.toFixed(2)}</p>
   `;
 
@@ -243,9 +211,10 @@ function openDemonPage(demon) {
   stopAllVideos();
   const container = document.getElementById("demon-page-container");
 
-  const customThumb = demon.thumbnail && String(demon.thumbnail).trim();
-  const verificationThumb = getYoutubeThumbnail(demon.verification);
-  const thumb = customThumb || verificationThumb || "https://via.placeholder.com/300x170?text=No+Preview";
+  const thumb =
+    demon.thumbnail?.trim() ||
+    getYoutubeThumbnail(demon.verification) ||
+    "https://via.placeholder.com/300x170?text=No+Preview";
 
   const creators = Array.isArray(demon.creators)
     ? demon.creators.join(", ")
@@ -254,62 +223,43 @@ function openDemonPage(demon) {
   const score = demon.position <= 150 ? 350 / Math.sqrt(demon.position) : 0;
 
   const videoId = getYoutubeId(demon.verification);
-  const iframeSrc = videoId ? "https://www.youtube.com/embed/" + videoId : "";
+  const iframeSrc = videoId ? `https://www.youtube.com/embed/${videoId}` : "";
 
   const videoBlock = iframeSrc
-    ? `<div class="demon-page-video fancy-video"><iframe src="${iframeSrc}" allowfullscreen></iframe></div>`
-    : `<img src="${thumb}" class="demon-page-video fancy-video">`;
+    ? `<div class="fancy-video"><iframe src="${iframeSrc}" allowfullscreen></iframe></div>`
+    : `<img src="${thumb}" class="fancy-video">`;
 
-  const validRecords = demon.records.map(r => {
-    if (typeof r === "string") {
-      return {
-        user: r,
-        percent: 100,
-        link: "",
-        hz: null
-      };
-    }
-    return {
-      user: r.user,
-      percent: r.percent || 100,
-      link: r.link || "",
-      hz: r.hz || null
-    };
-  }).filter(r =>
-    r.user &&
-    r.user !== "Not beaten yet" &&
-    !bannedPlayers.includes(r.user)
-  );
-
-  const recordList = validRecords
-    .sort((a, b) => (b.percent || 0) - (a.percent || 0))
+  const validRecords = demon.records
+    .map(r =>
+      typeof r === "string"
+        ? { user: r, percent: 100 }
+        : { user: r.user, percent: r.percent || 100, link: r.link || "" }
+    )
+    .filter(r => r.user && r.user !== "Not beaten yet" && !bannedPlayers.includes(r.user))
+    .sort((a, b) => b.percent - a.percent)
     .map(r => {
       const vid = r.link ? `<a href="${r.link}" target="_blank">Video</a>` : "No video";
       return `<p><strong>${r.user}</strong> — ${r.percent}% (${vid})</p>`;
     })
     .join("");
 
-  const finalRecords = recordList || "<p>No records yet.</p>";
-
   container.innerHTML = `
-    <div class="demon-page-header fancy-header">
+    <div class="fancy-header">
       <h2>#${demon.position} — ${demon.name}</h2>
-      ${demon.description ? `<p class="demon-description">${demon.description}</p>` : ""}
-      <div class="demon-page-meta fancy-meta">
+      ${demon.description ? `<p>${demon.description}</p>` : ""}
+      <div class="fancy-meta">
         <p><strong>Author:</strong> ${demon.author}</p>
         <p><strong>Creators:</strong> ${creators}</p>
         <p><strong>Verifier:</strong> ${demon.verifier}</p>
-        ${demon.position <= 150 ? `<p><strong>GDDL Tier:</strong> ${getTier(demon.position)}</p>` : ""}
+        <p><strong>GDDL Tier:</strong> ${getTier(demon.position)}</p>
         <p><strong>Score Value:</strong> ${score.toFixed(2)}</p>
-        ${demon.pointercrate ? `<p><a href="${demon.pointercrate}" target="_blank">Pointercrate</a></p>` : ""}
-        ${demon.aredl ? `<p><a href="${demon.aredl}" target="_blank">AREDL</a></p>` : ""}
       </div>
     </div>
 
     ${videoBlock}
 
     <h3 class="fancy-records-title">Records</h3>
-    <div class="fancy-records-box">${finalRecords}</div>
+    <div class="fancy-records-box">${validRecords || "<p>No records yet.</p>"}</div>
   `;
 
   document.querySelectorAll(".tab-btn").forEach(b => b.classList.remove("active"));
@@ -332,15 +282,33 @@ function setupSearchBar() {
   });
 }
 
+function getPlayerHardestDemon(playerName) {
+  let hardest = null;
+
+  globalDemons.forEach(demon => {
+    demon.records.forEach(r => {
+      const record = typeof r === "string"
+        ? { user: r, percent: 100 }
+        : { user: r.user, percent: r.percent || 100 };
+
+      if (record.user === playerName && record.percent === 100) {
+        if (!hardest || demon.position < hardest.position) {
+          hardest = demon;
+        }
+      }
+    });
+  });
+
+  return hardest;
+}
+
 function loadLeaderboard() {
   stopAllVideos();
 
   const container = document.getElementById("leaderboard-container");
   container.innerHTML = "";
 
-  for (let i = 0; i < 6; i++) {
-    container.appendChild(createPlaceholderPlayer());
-  }
+  for (let i = 0; i < 6; i++) container.appendChild(createPlaceholderPlayer());
 
   setTimeout(() => {
     const scores = {};
@@ -388,6 +356,8 @@ function loadLeaderboard() {
       }
     });
 
+    window._leaderboardScores = scores;
+
     const leaderboard = allPlayers
       .map(name => ({ name, score: scores[name] || 0 }))
       .filter(p => p.score > 0)
@@ -401,43 +371,100 @@ function loadLeaderboard() {
 }
 
 function createPlayerCard(name, score, rank) {
-  const card = document.createElement("div");
-  card.className = "player-card";
+  const hardest = getPlayerHardestDemon(name);
 
-  const img = document.createElement("img");
-  img.src = "https://via.placeholder.com/300x170?text=Player";
+  const tier = hardest ? getTier(hardest.position) : "Unranked";
+  const hardestName = hardest ? `#${hardest.position} — ${hardest.name}` : "None";
+
+  const card = document.createElement("div");
+  card.className = "player-card no-image";
 
   const info = document.createElement("div");
   info.className = "player-info";
   info.innerHTML = `
     <h2>#${rank} — ${name}</h2>
     <p><strong>Score:</strong> ${score.toFixed(2)}</p>
+    <p><strong>Player Tier:</strong> ${tier}</p>
+    <p><strong>Hardest Demon:</strong> ${hardestName}</p>
   `;
 
-  card.appendChild(img);
   card.appendChild(info);
+
+  card.addEventListener("click", () => openPlayerPage(name, window._leaderboardScores));
 
   return card;
 }
 
 function createPlaceholderPlayer() {
   const card = document.createElement("div");
-  card.className = "placeholder-player";
-
-  const thumb = document.createElement("div");
-  thumb.className = "placeholder-thumb";
+  card.className = "placeholder-player no-image";
 
   const info = document.createElement("div");
   info.className = "placeholder-info";
 
-  for (let i = 0; i < 3; i++) {
+  for (let i = 0; i < 4; i++) {
     const line = document.createElement("div");
     line.className = "placeholder-line";
     info.appendChild(line);
   }
 
-  card.appendChild(thumb);
   card.appendChild(info);
 
   return card;
+}
+
+function openPlayerPage(playerName, scores) {
+  stopAllVideos();
+  if (bannedPlayers.includes(playerName)) return;
+
+  const container = document.getElementById("leaderboard-container");
+  container.innerHTML = "";
+
+  const back = document.createElement("div");
+  back.className = "player-back";
+  back.textContent = "← Back to Leaderboard";
+  back.addEventListener("click", loadLeaderboard);
+  container.appendChild(back);
+
+  const title = document.createElement("h2");
+  title.textContent = `${playerName} — ${scores[playerName].toFixed(2)} points`;
+  container.appendChild(title);
+
+  const recordContainer = document.createElement("div");
+  recordContainer.className = "player-records";
+
+  globalDemons.forEach(demon => {
+    demon.records.forEach(r => {
+      const record = typeof r === "string"
+        ? { user: r, percent: 100 }
+        : { user: r.user, percent: r.percent || 100 };
+
+      if (record.user === playerName) {
+        const card = createDemonCard(demon);
+        const baseScore = demon.position <= 150 ? 350 / Math.sqrt(demon.position) : 0;
+        const earned = record.percent === 100
+          ? baseScore
+          : baseScore * (record.percent / 100);
+
+        const info = card.querySelector(".demon-info");
+        info.innerHTML += `<p><strong>Progress:</strong> ${record.percent}%</p>`;
+        info.innerHTML += `<p><strong>Points Earned:</strong> ${earned.toFixed(2)}</p>`;
+
+        recordContainer.appendChild(card);
+      }
+    });
+
+    if (demon.verifier === playerName) {
+      const card = createDemonCard(demon);
+      const baseScore = demon.position <= 150 ? 350 / Math.sqrt(demon.position) : 0;
+
+      const info = card.querySelector(".demon-info");
+      info.innerHTML += `<p><strong>Progress:</strong> 100% (Verifier)</p>`;
+      info.innerHTML += `<p><strong>Points Earned:</strong> ${baseScore.toFixed(2)}</p>`;
+
+      recordContainer.appendChild(card);
+    }
+  });
+
+  container.appendChild(recordContainer);
 }
