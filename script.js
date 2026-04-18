@@ -79,15 +79,19 @@ async function loadDemonList() {
 function renderDemonCards(listOverride) {
   stopAllVideos();
   const container = document.getElementById("demon-container");
+
   container.innerHTML = "";
 
-  for (let i = 0; i < 6; i++) container.appendChild(createPlaceholderCard());
+  for (let i = 0; i < 6; i++) {
+    container.appendChild(createPlaceholderCard());
+  }
+
+  const list = listOverride || globalDemons.filter(d => d.position <= 150);
 
   setTimeout(() => {
-    const list = listOverride || globalDemons.filter(d => d.position <= 150);
     container.innerHTML = "";
     list.forEach(d => container.appendChild(createDemonCard(d)));
-  }, 600);
+  }, 500);
 }
 
 function populateDropdowns() {
