@@ -12,6 +12,13 @@ document.addEventListener("DOMContentLoaded", () => {
   setupDropdownSelects();
 });
 
+function setupThemeToggle() {
+  const btn = document.getElementById("theme-toggle");
+  btn.addEventListener("click", () => {
+    document.body.classList.toggle("dark");
+  });
+}
+
 async function loadEverything() {
   bannedPlayers = await fetch("data/banned.json").then(r => r.json()).catch(() => []);
   await loadDemonList();
@@ -40,13 +47,6 @@ function setupTabs() {
   });
 }
 
-function setupThemeToggle() {
-  const btn = document.getElementById("theme-toggle");
-  btn.addEventListener("click", () => {
-    document.body.classList.toggle("dark");
-  });
-}
-
 async function loadDemonList() {
   const list = await fetch("data/list.json").then(r => r.json());
   const demonFiles = await Promise.all(
@@ -56,6 +56,7 @@ async function loadDemonList() {
         .catch(() => null)
     )
   );
+
   globalDemons = demonFiles
     .map((d, i) => (d ? { ...d, position: i + 1 } : null))
     .filter(Boolean);
@@ -256,8 +257,8 @@ function openDemonPage(demon) {
   const iframeSrc = videoId ? "https://www.youtube.com/embed/" + videoId : "";
 
   const videoBlock = iframeSrc
-    ? `<div class="demon-page-video"><iframe src="${iframeSrc}" allowfullscreen></iframe></div>`
-    : `<img src="${thumb}" class="demon-page-video">`;
+    ? `<div class="demon-page-video fancy-video"><iframe src="${iframeSrc}" allowfullscreen></iframe></div>`
+    : `<img src="${thumb}" class="demon-page-video fancy-video">`;
 
   const validRecords = demon.records.map(r => {
     if (typeof r === "string") {
@@ -291,12 +292,10 @@ function openDemonPage(demon) {
   const finalRecords = recordList || "<p>No records yet.</p>";
 
   container.innerHTML = `
-    <div class="demon-page-header">
+    <div class="demon-page-header fancy-header">
       <h2>#${demon.position} — ${demon.name}</h2>
-
       ${demon.description ? `<p class="demon-description">${demon.description}</p>` : ""}
-
-      <div class="demon-page-meta">
+      <div class="demon-page-meta fancy-meta">
         <p><strong>Author:</strong> ${demon.author}</p>
         <p><strong>Creators:</strong> ${creators}</p>
         <p><strong>Verifier:</strong> ${demon.verifier}</p>
@@ -309,8 +308,8 @@ function openDemonPage(demon) {
 
     ${videoBlock}
 
-    <h3>Records</h3>
-    ${finalRecords}
+    <h3 class="fancy-records-title">Records</h3>
+    <div class="fancy-records-box">${finalRecords}</div>
   `;
 
   document.querySelectorAll(".tab-btn").forEach(b => b.classList.remove("active"));
@@ -335,136 +334,110 @@ function setupSearchBar() {
 
 function loadLeaderboard() {
   stopAllVideos();
-  const scores = {};
-  const playerSet = new Set();
-
-  globalDemons.forEach(demon => {
-    if (demon.verifier && !bannedPlayers.includes(demon.verifier)) playerSet.add(demon.verifier);
-    demon.records.forEach(r => {
-      const record = typeof r === "string"
-        ? { user: r, percent: 100, link: "", hz: null }
-        : { user: r.user, percent: r.percent || 100, link: r.link || "", hz: r.hz || null };
-
-      if (
-        record.user &&
-        record.user !== "Not beaten yet" &&
-        !bannedPlayers.includes(record.user)
-      ) {
-        playerSet.add(record.user);
-      }
-    });
-  });
-
-  const allPlayers = Array.from(playerSet);
-
-  allPlayers.forEach(name => {
-    scores[name] = 0;
-  });
-
-  globalDemons.forEach(demon => {
-    if (demon.position > 150) return;
-
-    const baseScore = 350 / Math.sqrt(demon.position);
-
-    demon.records.forEach(r => {
-      const record = typeof r === "string"
-        ? { user: r, percent: 100, link: "", hz: null }
-        : { user: r.user, percent: r.percent || 100, link: r.link || "", hz: r.hz || null };
-
-      const p = record.user;
-      const progress = Number(record.percent);
-      if (!p || p === "Not beaten yet" || bannedPlayers.includes(p)) return;
-      if (progress >= demon.percentToQualify) {
-        const earned = progress === 100 ? baseScore : baseScore * (progress / 100);
-        scores[p] += earned;
-      }
-    });
-
-    const verifier = demon.verifier;
-    if (verifier && !bannedPlayers.includes(verifier)) {
-      scores[verifier] += baseScore;
-    }
-  });
-
-  const leaderboard = allPlayers
-    .map(name => ({
-      name,
-      score: scores[name] || 0
-    }))
-    .filter(p => p.score > 0)
-    .sort((a, b) => b.score - a.score);
-
-  renderLeaderboard(leaderboard, scores);
-}
-
-function renderLeaderboard(list, scores) {
-  const container = document.getElementById("leaderboard-container");
-  container.innerHTML = "";
-
-  list.forEach((p, i) => {
-    const row = document.createElement("div");
-    row.className = "leaderboard-row";
-    row.innerHTML = `
-      <span>#${i + 1} ${p.name}</span>
-      <span>${p.score.toFixed(2)}</span>
-    `;
-    row.addEventListener("click", () => openPlayerPage(p.name, scores));
-    container.appendChild(row);
-  });
-}
-
-function openPlayerPage(playerName, scores) {
-  stopAllVideos();
-  if (bannedPlayers.includes(playerName)) return;
 
   const container = document.getElementById("leaderboard-container");
   container.innerHTML = "";
 
-  const back = document.createElement("div");
-  back.className = "player-back";
-  back.textContent = "← Back to Leaderboard";
-  back.addEventListener("click", loadLeaderboard);
-  container.appendChild(back);
+  for (let i = 0; i < 6; i++) {
+    container.appendChild(createPlaceholderPlayer());
+  }
 
-  const title = document.createElement("h2");
-  title.textContent = playerName + " — " + scores[playerName].toFixed(2) + " points";
-  container.appendChild(title);
+  setTimeout(() => {
+    const scores = {};
+    const playerSet = new Set();
 
-  const recordContainer = document.createElement("div");
-  recordContainer.className = "player-records";
+    globalDemons.forEach(demon => {
+      if (demon.verifier && !bannedPlayers.includes(demon.verifier)) playerSet.add(demon.verifier);
+      demon.records.forEach(r => {
+        const record = typeof r === "string"
+          ? { user: r, percent: 100 }
+          : { user: r.user, percent: r.percent || 100 };
 
-  globalDemons.forEach(demon => {
-    demon.records.forEach(r => {
-      const record = typeof r === "string"
-        ? { user: r, percent: 100, link: "", hz: null }
-        : { user: r.user, percent: r.percent || 100, link: r.link || "", hz: r.hz || null };
+        if (record.user && record.user !== "Not beaten yet" && !bannedPlayers.includes(record.user)) {
+          playerSet.add(record.user);
+        }
+      });
+    });
 
-      if (record.user === playerName) {
-        const card = createDemonCard(demon);
-        const baseScore = demon.position <= 150 ? 350 / Math.sqrt(demon.position) : 0;
-        const earned = record.percent === 100
-          ? baseScore
-          : baseScore * (record.percent / 100);
+    const allPlayers = Array.from(playerSet);
 
-        const info = card.querySelector(".demon-info");
-        info.innerHTML += `<p><strong>Progress:</strong> ${record.percent}%</p>`;
-        info.innerHTML += `<p><strong>Points Earned:</strong> ${earned.toFixed(2)}</p>`;
+    allPlayers.forEach(name => scores[name] = 0);
 
-        recordContainer.appendChild(card);
+    globalDemons.forEach(demon => {
+      if (demon.position > 150) return;
+
+      const baseScore = 350 / Math.sqrt(demon.position);
+
+      demon.records.forEach(r => {
+        const record = typeof r === "string"
+          ? { user: r, percent: 100 }
+          : { user: r.user, percent: r.percent || 100 };
+
+        const p = record.user;
+        if (!p || p === "Not beaten yet" || bannedPlayers.includes(p)) return;
+
+        if (record.percent >= demon.percentToQualify) {
+          const earned = record.percent === 100 ? baseScore : baseScore * (record.percent / 100);
+          scores[p] += earned;
+        }
+      });
+
+      const verifier = demon.verifier;
+      if (verifier && !bannedPlayers.includes(verifier)) {
+        scores[verifier] += baseScore;
       }
     });
 
-    if (demon.verifier === playerName) {
-      const card = createDemonCard(demon);
-      const baseScore = demon.position <= 150 ? 350 / Math.sqrt(demon.position) : 0;
+    const leaderboard = allPlayers
+      .map(name => ({ name, score: scores[name] || 0 }))
+      .filter(p => p.score > 0)
+      .sort((a, b) => b.score - a.score);
 
-      const info = card.querySelector(".demon-info");
-      info.innerHTML += `<p><strong>Progress:</strong> 100% (Verifier)</p>`;
-      info.innerHTML += `<p><strong>Points Earned:</strong> ${baseScore.toFixed(2)}</p>`;
+    container.innerHTML = "";
+    leaderboard.forEach((p, i) => {
+      container.appendChild(createPlayerCard(p.name, p.score, i + 1));
+    });
+  }, 600);
+}
 
-      recordContainer.appendChild(card);
-    }
-  });
+function createPlayerCard(name, score, rank) {
+  const card = document.createElement("div");
+  card.className = "player-card";
 
-  container.appendChild(recordContainer);
+  const img = document.createElement("img");
+  img.src = "https://via.placeholder.com/300x170?text=Player";
+
+  const info = document.createElement("div");
+  info.className = "player-info";
+  info.innerHTML = `
+    <h2>#${rank} — ${name}</h2>
+    <p><strong>Score:</strong> ${score.toFixed(2)}</p>
+  `;
+
+  card.appendChild(img);
+  card.appendChild(info);
+
+  return card;
+}
+
+function createPlaceholderPlayer() {
+  const card = document.createElement("div");
+  card.className = "placeholder-player";
+
+  const thumb = document.createElement("div");
+  thumb.className = "placeholder-thumb";
+
+  const info = document.createElement("div");
+  info.className = "placeholder-info";
+
+  for (let i = 0; i < 3; i++) {
+    const line = document.createElement("div");
+    line.className = "placeholder-line";
+    info.appendChild(line);
+  }
+
+  card.appendChild(thumb);
+  card.appendChild(info);
+
+  return card;
 }
