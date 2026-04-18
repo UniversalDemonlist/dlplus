@@ -7,12 +7,10 @@ let bannedPlayers = [];
 document.addEventListener("DOMContentLoaded", () => {
   setupTabs();
   setupThemeToggle();
-  showInitialPlaceholders();
   loadEverything();
   setupSearchBar();
   setupDropdownSelects();
 });
-
 
 async function loadEverything() {
   bannedPlayers = await fetch("data/banned.json").then(r => r.json()).catch(() => []);
@@ -49,16 +47,6 @@ function setupThemeToggle() {
   });
 }
 
-function showInitialPlaceholders() {
-  const container = document.getElementById("demon-container");
-  if (!container) return;
-  container.innerHTML = "";
-  for (let i = 0; i < 6; i++) {
-    container.appendChild(createPlaceholderCard());
-  }
-}
-
-
 async function loadDemonList() {
   const list = await fetch("data/list.json").then(r => r.json());
   const demonFiles = await Promise.all(
@@ -91,12 +79,11 @@ function renderDemonCards(listOverride) {
   }
 
   setTimeout(() => {
-    const list = listOverride || [...mainList, ...extendedList];
+    const list = listOverride || [...mainList, ...extendedList, ...legacyList];
     container.innerHTML = "";
     list.forEach(d => container.appendChild(createDemonCard(d)));
   }, 600);
 }
-
 
 function populateDropdowns() {
   const mainSelect = document.getElementById("select-main");
@@ -185,6 +172,20 @@ function getYoutubeThumbnail(url) {
   return "https://i.ytimg.com/vi/" + id + "/hqdefault.jpg";
 }
 
+function getTier(pos) {
+  if (pos <= 10) return 39;
+  if (pos <= 20) return 38;
+  if (pos <= 30) return 37;
+  if (pos <= 40) return 36;
+  if (pos <= 50) return 35;
+  if (pos <= 60) return 34;
+  if (pos <= 70) return 33;
+  if (pos <= 80) return 32;
+  if (pos <= 90) return 31;
+  if (pos <= 100) return 30;
+  return 20;
+}
+
 function createDemonCard(demon) {
   const card = document.createElement("div");
   card.className = "demon-card";
@@ -209,7 +210,7 @@ function createDemonCard(demon) {
     <p><strong>Author:</strong> ${demon.author}</p>
     <p><strong>Creators:</strong> ${creators}</p>
     <p><strong>Verifier:</strong> ${demon.verifier}</p>
-    <p><strong>Percent to Qualify:</strong> ${demon.percentToQualify}%</p>
+    <p><strong>GDDL Tier:</strong> ${getTier(demon.position)}</p>
     <p><strong>Score Value:</strong> ${score.toFixed(2)}</p>
   `;
 
@@ -242,7 +243,6 @@ function createPlaceholderCard() {
 
   return card;
 }
-
 
 function openDemonPage(demon) {
   stopAllVideos();
@@ -309,8 +309,10 @@ function openDemonPage(demon) {
         <p><strong>Author:</strong> ${demon.author}</p>
         <p><strong>Creators:</strong> ${creators}</p>
         <p><strong>Verifier:</strong> ${demon.verifier}</p>
-        <p><strong>Percent to Qualify:</strong> ${demon.percentToQualify}%</p>
+        <p><strong>GDDL Tier:</strong> ${getTier(demon.position)}</p>
         <p><strong>Score Value:</strong> ${score.toFixed(2)}</p>
+        ${demon.pointercrate ? `<p><a href="${demon.pointercrate}" target="_blank">Pointercrate</a></p>` : ""}
+        ${demon.aredl ? `<p><a href="${demon.aredl}" target="_blank">AREDL</a></p>` : ""}
       </div>
     </div>
 
@@ -331,7 +333,7 @@ function setupSearchBar() {
   input.addEventListener("input", () => {
     stopAllVideos();
     const q = input.value.toLowerCase();
-    const combined = [...mainList, ...extendedList];
+    const combined = [...mainList, ...extendedList, ...legacyList];
     const filtered = combined.filter(d =>
       d.name.toLowerCase().includes(q) ||
       String(d.position).includes(q)
@@ -369,8 +371,6 @@ function loadLeaderboard() {
   });
 
   globalDemons.forEach(demon => {
-    if (demon.position > 100) return;
-
     const baseScore = 350 / Math.sqrt(demon.position);
 
     demon.records.forEach(r => {
