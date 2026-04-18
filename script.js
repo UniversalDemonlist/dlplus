@@ -61,8 +61,8 @@ async function loadDemonList() {
     .filter(Boolean);
 
   mainList = globalDemons.filter(d => d.position >= 1 && d.position <= 75);
-  extendedList = globalDemons.filter(d => d.position >= 76 && d.position <= 100);
-  legacyList = globalDemons.filter(d => d.position > 100);
+  extendedList = globalDemons.filter(d => d.position >= 76 && d.position <= 150);
+  legacyList = globalDemons.filter(d => d.position > 150);
 
   renderDemonCards();
   populateDropdowns();
@@ -79,7 +79,7 @@ function renderDemonCards(listOverride) {
   }
 
   setTimeout(() => {
-    const list = listOverride || [...mainList, ...extendedList, ...legacyList];
+    const list = listOverride || globalDemons.filter(d => d.position <= 150);
     container.innerHTML = "";
     list.forEach(d => container.appendChild(createDemonCard(d)));
   }, 600);
@@ -178,12 +178,7 @@ function getTier(pos) {
   if (pos <= 30) return 37;
   if (pos <= 40) return 36;
   if (pos <= 50) return 35;
-  if (pos <= 60) return 34;
-  if (pos <= 70) return 33;
-  if (pos <= 80) return 32;
-  if (pos <= 90) return 31;
-  if (pos <= 100) return 30;
-  return 20;
+  return 34;
 }
 
 function createDemonCard(demon) {
@@ -202,15 +197,14 @@ function createDemonCard(demon) {
     ? demon.creators.join(", ")
     : demon.creators || "Unknown";
 
-  const score = demon.position <= 100 ? 350 / Math.sqrt(demon.position) : 0;
-  const posLabel = demon.position > 100 ? "Legacy" : "#" + demon.position;
+  const score = demon.position <= 150 ? 350 / Math.sqrt(demon.position) : 0;
 
   info.innerHTML = `
-    <h2>${posLabel} — ${demon.name}</h2>
+    <h2>#${demon.position} — ${demon.name}</h2>
     <p><strong>Author:</strong> ${demon.author}</p>
     <p><strong>Creators:</strong> ${creators}</p>
     <p><strong>Verifier:</strong> ${demon.verifier}</p>
-    <p><strong>GDDL Tier:</strong> ${getTier(demon.position)}</p>
+    ${demon.position <= 150 ? `<p><strong>GDDL Tier:</strong> ${getTier(demon.position)}</p>` : ""}
     <p><strong>Score Value:</strong> ${score.toFixed(2)}</p>
   `;
 
@@ -256,8 +250,7 @@ function openDemonPage(demon) {
     ? demon.creators.join(", ")
     : demon.creators || "Unknown";
 
-  const score = demon.position <= 100 ? 350 / Math.sqrt(demon.position) : 0;
-  const posLabel = demon.position > 100 ? "Legacy" : "#" + demon.position;
+  const score = demon.position <= 150 ? 350 / Math.sqrt(demon.position) : 0;
 
   const videoId = getYoutubeId(demon.verification);
   const iframeSrc = videoId ? "https://www.youtube.com/embed/" + videoId : "";
@@ -271,7 +264,7 @@ function openDemonPage(demon) {
       return {
         user: r,
         percent: 100,
-        link: "https://static.wikia.nocookie.net/baldis-basics-in-education-and-learning/images/8/8e/TITLE_BG.png/revision/latest/scale-to-width-down/185?cb=20190105013932",
+        link: "",
         hz: null
       };
     }
@@ -290,10 +283,8 @@ function openDemonPage(demon) {
   const recordList = validRecords
     .sort((a, b) => (b.percent || 0) - (a.percent || 0))
     .map(r => {
-      const player = r.user;
-      const progress = typeof r.percent === "number" ? r.percent : 0;
       const vid = r.link ? `<a href="${r.link}" target="_blank">Video</a>` : "No video";
-      return `<p><strong>${player}</strong> — ${progress}% (${vid})</p>`;
+      return `<p><strong>${r.user}</strong> — ${r.percent}% (${vid})</p>`;
     })
     .join("");
 
@@ -301,7 +292,7 @@ function openDemonPage(demon) {
 
   container.innerHTML = `
     <div class="demon-page-header">
-      <h2>${posLabel} — ${demon.name}</h2>
+      <h2>#${demon.position} — ${demon.name}</h2>
 
       ${demon.description ? `<p class="demon-description">${demon.description}</p>` : ""}
 
@@ -309,7 +300,7 @@ function openDemonPage(demon) {
         <p><strong>Author:</strong> ${demon.author}</p>
         <p><strong>Creators:</strong> ${creators}</p>
         <p><strong>Verifier:</strong> ${demon.verifier}</p>
-        <p><strong>GDDL Tier:</strong> ${getTier(demon.position)}</p>
+        ${demon.position <= 150 ? `<p><strong>GDDL Tier:</strong> ${getTier(demon.position)}</p>` : ""}
         <p><strong>Score Value:</strong> ${score.toFixed(2)}</p>
         ${demon.pointercrate ? `<p><a href="${demon.pointercrate}" target="_blank">Pointercrate</a></p>` : ""}
         ${demon.aredl ? `<p><a href="${demon.aredl}" target="_blank">AREDL</a></p>` : ""}
@@ -333,7 +324,7 @@ function setupSearchBar() {
   input.addEventListener("input", () => {
     stopAllVideos();
     const q = input.value.toLowerCase();
-    const combined = [...mainList, ...extendedList, ...legacyList];
+    const combined = [...mainList, ...extendedList];
     const filtered = combined.filter(d =>
       d.name.toLowerCase().includes(q) ||
       String(d.position).includes(q)
@@ -371,6 +362,8 @@ function loadLeaderboard() {
   });
 
   globalDemons.forEach(demon => {
+    if (demon.position > 150) return;
+
     const baseScore = 350 / Math.sqrt(demon.position);
 
     demon.records.forEach(r => {
@@ -448,7 +441,7 @@ function openPlayerPage(playerName, scores) {
 
       if (record.user === playerName) {
         const card = createDemonCard(demon);
-        const baseScore = demon.position <= 100 ? 350 / Math.sqrt(demon.position) : 0;
+        const baseScore = demon.position <= 150 ? 350 / Math.sqrt(demon.position) : 0;
         const earned = record.percent === 100
           ? baseScore
           : baseScore * (record.percent / 100);
@@ -463,7 +456,7 @@ function openPlayerPage(playerName, scores) {
 
     if (demon.verifier === playerName) {
       const card = createDemonCard(demon);
-      const baseScore = demon.position <= 100 ? 350 / Math.sqrt(demon.position) : 0;
+      const baseScore = demon.position <= 150 ? 350 / Math.sqrt(demon.position) : 0;
 
       const info = card.querySelector(".demon-info");
       info.innerHTML += `<p><strong>Progress:</strong> 100% (Verifier)</p>`;
