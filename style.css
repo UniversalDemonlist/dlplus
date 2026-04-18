@@ -1,15 +1,12 @@
 body {
   margin: 0;
   font-family: "Montserrat", sans-serif;
-  background-image: url("Background.png");
+  background-image: url("your-background-image.jpg");
   background-size: cover;
   background-position: center;
   background-attachment: fixed;
   color: #111;
-  padding-top: 40px;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
+  padding-top: 50px;
 }
 
 body.dark {
@@ -20,8 +17,8 @@ body.dark {
 
 #theme-toggle {
   position: fixed;
-  top: 4px;
-  right: 6px;
+  top: 6px;
+  right: 8px;
   background: #151827;
   color: #f5f5f5;
   border: none;
@@ -29,26 +26,31 @@ body.dark {
   cursor: pointer;
   border-radius: 4px;
   font-size: 12px;
-  z-index: 100;
+  z-index: 200;
 }
 
 .tabs {
   display: flex;
-  gap: 6px;
+  align-items: center;
+  gap: 8px;
   padding: 6px 10px;
   background: #0b0d14;
   border-bottom: 1px solid #222633;
   position: fixed;
   top: 0;
   width: 100%;
-  height: 34px;
-  align-items: center;
-  z-index: 50;
+  height: 40px;
+  z-index: 150;
+}
+
+.tabs-logo {
+  height: 28px;
+  width: 28px;
 }
 
 .tab-btn {
   background: rgba(255,255,255,0.15);
-  padding: 7px 14px;
+  padding: 6px 12px;
   border-radius: 6px;
   font-size: 12px;
   border: 1px solid #2d3350;
@@ -61,11 +63,6 @@ body.dark .tab-btn {
   background: rgba(255,255,255,0.08);
 }
 
-.tab-btn:hover {
-  transform: translateY(-2px);
-  background: rgba(255,255,255,0.25);
-}
-
 .tab-btn.active {
   background: rgba(43,92,255,0.6);
   border-color: #3f6dff;
@@ -73,74 +70,73 @@ body.dark .tab-btn {
 
 .tab-content {
   display: none;
-  padding: 10px;
-  background: transparent;
-  width: 100%;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
+  padding: 20px;
+  max-width: 900px;
+  margin: 0 auto;
 }
 
 .tab-content.active {
-  display: flex;
+  display: block;
+}
+
+.panel {
+  background: rgba(255,255,255,0.85);
+  padding: 20px;
+  border-radius: 10px;
+  border: 1px solid #ccc;
+}
+
+body.dark .panel {
+  background: rgba(20,20,20,0.9);
+  border-color: #333;
 }
 
 #search-bar {
   width: 100%;
-  max-width: 780px;
-  padding: 8px 12px;
-  margin-bottom: 12px;
-  border-radius: 4px;
+  padding: 10px;
+  border-radius: 6px;
   border: 1px solid #222633;
-  background: #ffffffee;
-  color: #111;
-  font-size: 14px;
-}
-
-body.dark #search-bar {
-  background: #1a1a1a;
-  color: #f5f5f5;
-  border-color: #444;
+  margin-bottom: 15px;
 }
 
 .dropdown-row {
   display: flex;
+  gap: 15px;
   flex-wrap: wrap;
-  gap: 10px;
-  margin-bottom: 12px;
-  width: 100%;
-  max-width: 780px;
+  margin-bottom: 15px;
+}
+
+.dropdown-group label {
+  font-size: 13px;
+  margin-bottom: 4px;
+  display: block;
 }
 
 .dropdown-group select {
   padding: 6px 10px;
-  border-radius: 4px;
+  border-radius: 6px;
   border: 1px solid #222633;
-  background: #ffffffee;
-  color: #111;
 }
 
-body.dark .dropdown-group select {
-  background: #1a1a1a;
-  color: #f5f5f5;
-  border-color: #444;
+#demon-container,
+#leaderboard-container {
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+  margin-top: 15px;
 }
 
 .demon-card,
 .player-card {
   display: flex;
-  gap: 20px;
+  gap: 15px;
   background: rgba(255,255,255,0.92);
   border-radius: 10px;
-  padding: 20px;
-  cursor: pointer;
+  padding: 15px;
   border: 1px solid #ccc;
+  cursor: pointer;
   transition: 0.2s ease;
-  box-shadow: 0 4px 10px rgba(0,0,0,0.25);
-  width: 780px;
-  height: 170px;
-  margin: 0 auto;
-  overflow: hidden;
+  height: 160px;
 }
 
 body.dark .demon-card,
@@ -155,61 +151,45 @@ body.dark .player-card {
 }
 
 .demon-card img {
-  width: 300px;
-  height: 170px;
+  width: 260px;
+  height: 160px;
   object-fit: cover;
   border-radius: 8px;
-  flex-shrink: 0;
 }
 
 .player-card.no-image {
   justify-content: center;
   align-items: center;
-  padding-left: 0;
 }
 
 .player-card.no-image .player-info {
-  width: 100%;
   text-align: center;
 }
 
 .placeholder-card,
 .placeholder-player {
   display: flex;
-  gap: 20px;
+  gap: 15px;
   background: rgba(255,255,255,0.92);
   border-radius: 10px;
-  padding: 20px;
+  padding: 15px;
   border: 1px solid #ccc;
-  width: 780px;
-  height: 170px;
-  margin: 0 auto;
+  height: 160px;
   animation: placeholderGlow 1.8s ease-in-out infinite;
 }
 
-body.dark .placeholder-card,
-body.dark .placeholder-player {
-  background: rgba(30,30,30,0.95);
-  border-color: #333;
-}
-
-.placeholder-player.no-image {
-  justify-content: center;
-  align-items: center;
-}
-
 .placeholder-thumb {
-  width: 300px;
-  height: 170px;
-  border-radius: 8px;
+  width: 260px;
+  height: 160px;
   background: #1a1d2e;
+  border-radius: 8px;
 }
 
 .placeholder-info {
   flex: 1;
   display: flex;
   flex-direction: column;
-  gap: 10px;
+  gap: 8px;
 }
 
 .placeholder-line {
@@ -225,87 +205,26 @@ body.dark .placeholder-player {
   100% { opacity: 0.7; }
 }
 
-.fancy-demon-header {
-  text-align: center;
-  max-width: 780px;
-  margin-bottom: 20px;
-}
-
-.fancy-demon-header h1 {
-  font-size: 32px;
-  margin-bottom: 10px;
-}
-
-.fancy-desc {
-  opacity: 0.85;
-  margin-bottom: 15px;
-}
-
-.fancy-meta-box {
-  background: rgba(255,255,255,0.12);
-  padding: 15px;
-  border-radius: 10px;
-  max-width: 780px;
-  margin: 0 auto;
-}
-
-body.dark .fancy-meta-box {
-  background: rgba(255,255,255,0.06);
-}
-
-.fancy-video-wrap {
-  width: 100%;
-  max-width: 780px;
-  margin: 20px auto;
-  display: flex;
-  justify-content: center;
-}
-
-.fancy-video-wrap iframe,
-.fancy-video-wrap img {
-  width: 100%;
-  border-radius: 12px;
-}
-
-.fancy-records-title {
-  text-align: center;
-  margin-top: 25px;
-}
-
-.fancy-records-box {
-  max-width: 780px;
-  margin: 0 auto;
-  padding: 15px;
-  border-radius: 10px;
-  background: rgba(255,255,255,0.12);
-}
-
-body.dark .fancy-records-box {
-  background: rgba(255,255,255,0.06);
-}
-
 @media (max-width: 700px) {
   .demon-card,
   .player-card {
     flex-direction: column;
     height: auto;
-    width: 100%;
   }
 
   .demon-card img {
     width: 100%;
-    height: 220px;
+    height: 200px;
   }
 
   .placeholder-card,
   .placeholder-player {
     flex-direction: column;
     height: auto;
-    width: 100%;
   }
 
   .placeholder-thumb {
     width: 100%;
-    height: 220px;
+    height: 200px;
   }
 }
