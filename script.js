@@ -499,19 +499,33 @@ function openPlayerPage(playerName, scores) {
   `;
   container.appendChild(info);
 
-  const section = document.createElement("h3");
-  section.textContent = "Completed Demons";
-  container.appendChild(section);
+  const section1 = document.createElement("h3");
+  section1.textContent = "Completed Demons";
+  container.appendChild(section1);
 
-  const recordContainer = document.createElement("div");
-  recordContainer.className = "player-records";
+  const completedContainer = document.createElement("div");
+  completedContainer.className = "player-records";
 
   stats.completed.forEach(demon => {
     const card = createDemonCard(demon);
-    recordContainer.appendChild(card);
+    completedContainer.appendChild(card);
   });
 
-  container.appendChild(recordContainer);
+  container.appendChild(completedContainer);
+
+  const section2 = document.createElement("h3");
+  section2.textContent = "Verified Demons";
+  container.appendChild(section2);
+
+  const verifiedContainer = document.createElement("div");
+  verifiedContainer.className = "player-records";
+
+  stats.verified.forEach(demon => {
+    const card = createDemonCard(demon);
+    verifiedContainer.appendChild(card);
+  });
+
+  container.appendChild(verifiedContainer);
 }
 
 function showInitialPlaceholders() {
