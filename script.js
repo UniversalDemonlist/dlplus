@@ -169,19 +169,14 @@ function createDemonCard(demon) {
   const info = document.createElement("div");
   info.className = "demon-info";
 
-  const creators = Array.isArray(demon.creators)
-    ? demon.creators.join(", ")
-    : demon.creators || "Unknown";
-
   const score = demon.position <= 150 ? 350 / Math.sqrt(demon.position) : 0;
 
   info.innerHTML = `
     <h2>#${demon.position} — ${demon.name}</h2>
     <p><strong>Author:</strong> ${demon.author}</p>
-    <p><strong>Creators:</strong> ${creators}</p>
+    <p><strong>Score Value:</strong> ${score.toFixed(2)}</p>
     <p><strong>Verifier:</strong> ${demon.verifier}</p>
     <p><strong>GDDL Tier:</strong> ${getTier(demon.position)}</p>
-    <p><strong>Score Value:</strong> ${score.toFixed(2)}</p>
   `;
 
   card.appendChild(img);
