@@ -588,6 +588,25 @@ body.dark #theme-toggle {
   }
 }
 
+body.dark {
+  background: #000;
+  color: #fff;
+}
+
+body.dark .tab-content {
+  display: block;
+}
+
+body.dark .tabs {
+  background: #0b0d14;
+  z-index: 200;
+}
+
+.tab-content {
+  margin-top: 70px;
+}
+
+
 
 
 
