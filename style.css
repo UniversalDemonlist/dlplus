@@ -606,6 +606,39 @@ body.dark .tabs {
   margin-top: 70px;
 }
 
+body:not(.dark) .panel {
+  background: rgba(255,255,255,0.9) !important;
+  border: 1px solid #ccc !important;
+}
+
+body:not(.dark) #search-bar,
+body:not(.dark) select {
+  background: rgba(255,255,255,1) !important;
+  color: #000 !important;
+  border: 1px solid #aaa !important;
+}
+
+body:not(.dark) .demon-card,
+body:not(.dark) .player-card {
+  background: rgba(255,255,255,0.95) !important;
+  border: 1px solid #ccc !important;
+}
+
+body:not(.dark) .demon-info {
+  color: #000 !important;
+}
+
+body:not(.dark) .placeholder-card,
+body:not(.dark) .placeholder-player {
+  background: rgba(255,255,255,0.95) !important;
+  border: 1px solid #ccc !important;
+}
+
+body:not(.dark) .placeholder-line {
+  background: #ddd !important;
+}
+
+
 
 
 
