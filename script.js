@@ -52,6 +52,12 @@ function setupTabs() {
 
       btn.classList.add("active");
       document.getElementById(tab).classList.add("active");
+
+      window.scrollTo({ top: 0, behavior: "smooth" });
+
+      if (tab !== "leaderboard") {
+        loadLeaderboard();
+      }
     });
   });
 }
