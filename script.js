@@ -308,6 +308,45 @@ function getPlayerHardestDemon(playerName) {
   return hardest;
 }
 
+function getPlayerStats(playerName) {
+  let main = 0;
+  let extended = 0;
+  let legacy = 0;
+  let completed = [];
+  let created = [];
+  let verified = [];
+
+  globalDemons.forEach(demon => {
+    const pos = demon.position;
+
+    demon.records.forEach(r => {
+      const record = typeof r === "string"
+        ? { user: r, percent: 100 }
+        : { user: r.user, percent: r.percent || 100 };
+
+      if (record.user === playerName && record.percent === 100) {
+        completed.push(demon);
+
+        if (pos <= 75) main++;
+        else if (pos <= 150) extended++;
+        else legacy++;
+      }
+    });
+
+    if (Array.isArray(demon.creators) && demon.creators.includes(playerName)) {
+      created.push(demon);
+    } else if (demon.creators === playerName) {
+      created.push(demon);
+    }
+
+    if (demon.verifier === playerName) {
+      verified.push(demon);
+    }
+  });
+
+  return { main, extended, legacy, completed, created, verified };
+}
+
 function loadLeaderboard() {
   stopAllVideos();
 
@@ -432,44 +471,44 @@ function openPlayerPage(playerName, scores) {
   back.addEventListener("click", loadLeaderboard);
   container.appendChild(back);
 
+  const stats = getPlayerStats(playerName);
+  const hardest = getPlayerHardestDemon(playerName);
+
+  const rank = Object.entries(scores)
+    .sort((a, b) => b[1] - a[1])
+    .findIndex(([name]) => name === playerName) + 1;
+
   const title = document.createElement("h2");
-  title.textContent = `${playerName} — ${scores[playerName].toFixed(2)} points`;
+  title.textContent = `${playerName} — Rank #${rank} — ${scores[playerName].toFixed(2)} points`;
   container.appendChild(title);
+
+  const info = document.createElement("div");
+  info.className = "player-profile-info";
+  info.innerHTML = `
+    <p><strong>Demonlist Rank:</strong> #${rank}</p>
+    <p><strong>Total Score:</strong> ${scores[playerName].toFixed(2)}</p>
+    <p><strong>Main List Completed:</strong> ${stats.main}</p>
+    <p><strong>Extended List Completed:</strong> ${stats.extended}</p>
+    <p><strong>Legacy List Completed:</strong> ${stats.legacy}</p>
+    <p><strong>Hardest Demon Completed:</strong> ${
+      hardest ? `#${hardest.position} — ${hardest.name}` : "None"
+    }</p>
+    <p><strong>Total Demons Completed:</strong> ${stats.completed.length}</p>
+    <p><strong>Demons Created:</strong> ${stats.created.length}</p>
+    <p><strong>Demons Verified:</strong> ${stats.verified.length}</p>
+  `;
+  container.appendChild(info);
+
+  const section = document.createElement("h3");
+  section.textContent = "Completed Demons";
+  container.appendChild(section);
 
   const recordContainer = document.createElement("div");
   recordContainer.className = "player-records";
 
-  globalDemons.forEach(demon => {
-    demon.records.forEach(r => {
-      const record = typeof r === "string"
-        ? { user: r, percent: 100 }
-        : { user: r.user, percent: r.percent || 100 };
-
-      if (record.user === playerName) {
-        const card = createDemonCard(demon);
-        const baseScore = demon.position <= 150 ? 350 / Math.sqrt(demon.position) : 0;
-        const earned = record.percent === 100
-          ? baseScore
-          : baseScore * (record.percent / 100);
-
-        const info = card.querySelector(".demon-info");
-        info.innerHTML += `<p><strong>Progress:</strong> ${record.percent}%</p>`;
-        info.innerHTML += `<p><strong>Points Earned:</strong> ${earned.toFixed(2)}</p>`;
-
-        recordContainer.appendChild(card);
-      }
-    });
-
-    if (demon.verifier === playerName) {
-      const card = createDemonCard(demon);
-      const baseScore = demon.position <= 150 ? 350 / Math.sqrt(demon.position) : 0;
-
-      const info = card.querySelector(".demon-info");
-      info.innerHTML += `<p><strong>Progress:</strong> 100% (Verifier)</p>`;
-      info.innerHTML += `<p><strong>Points Earned:</strong> ${baseScore.toFixed(2)}</p>`;
-
-      recordContainer.appendChild(card);
-    }
+  stats.completed.forEach(demon => {
+    const card = createDemonCard(demon);
+    recordContainer.appendChild(card);
   });
 
   container.appendChild(recordContainer);
@@ -482,4 +521,3 @@ function showInitialPlaceholders() {
     container.appendChild(createPlaceholderCard());
   }
 }
-
