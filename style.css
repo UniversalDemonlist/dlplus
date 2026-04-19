@@ -557,6 +557,38 @@ body.dark #theme-toggle {
   margin-right: 10px;
 }
 
+@media (max-width: 900px) {
+  .demon-card,
+  .player-card {
+    flex-direction: column;
+    width: 92%;
+    margin: 0 auto;
+    padding: 14px;
+  }
+
+  .demon-card img {
+    width: 100%;
+    aspect-ratio: 1 / 1;
+    border-radius: 10px;
+    object-fit: cover;
+  }
+
+  .placeholder-card,
+  .placeholder-player {
+    flex-direction: column;
+    width: 92%;
+    margin: 0 auto;
+    padding: 14px;
+  }
+
+  .placeholder-thumb {
+    width: 100%;
+    aspect-ratio: 1 / 1;
+    border-radius: 10px;
+  }
+}
+
+
 
 
 
