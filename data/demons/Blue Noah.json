@@ -3,12 +3,11 @@
     "name": "Blue Noah",
     "author": "Squeeg",
     "creators": ["Squeeg"],
-    "verifier": "Kermitgd",
-    "verification": "https://www.youtube.com/watch?v=_FYebeIb-Zk",
+    "verifier": "Squeeg",
+    "verification": "https://www.youtube.com/watch?v=NEYJNH9OvX0",
     "percentToQualify": 57,
     "password": "Not Copyable",
     "description": "Spam challenge, which is only possible with rake clicking.",
-    "thumbnail": "https://img.youtube.com/vi/NEYJNH9OvX0/maxresdefault.jpg",
     "records": [
         {
             "user": "Not beaten yet",
@@ -16,6 +15,7 @@
             "percent": 1,
             "hz": 360
         },
-        "G1rcy"
+        "G1rcy",
+        "Kermitgd"
     ]
 }
