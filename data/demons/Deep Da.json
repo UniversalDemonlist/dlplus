@@ -3,7 +3,7 @@
     "name": "The Deep Dark Infinity",
     "author": "squeeg",
     "creators": ["squeeg"],
-    "verifier": "G1rcy",
+    "verifier": "Squeeg",",
     "verification": "https://www.youtube.com/watch?v=nujhcG3-Y98",
     "percentToQualify": 57,
     "password": "Not Copyable",
@@ -15,6 +15,7 @@
             "link": "https://www.youtube.com/watch?v=wZwCXjVdqz0",
             "percent": 1,
             "hz": 360
-        }
+        },
+        "G1rcy",
     ]
 }
