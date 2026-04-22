@@ -489,8 +489,10 @@ function createPlayerCard(name, score, rank) {
   return card;
 }
 
-function openPlayerPage(playerName, scores) {
+function openPlayerPage(key, scores) {
   stopAllVideos();
+
+  const playerName = window._playerMap.get(key) || key;
   const container = document.getElementById("leaderboard-container");
   if (!container) return;
 
