@@ -9,6 +9,7 @@ window._leaderboardScores = {};
 window._playerMap = new Map();
 
 function normalizeName(name) {
+  if (typeof name !== "string") return "";
   return name.trim().toLowerCase();
 }
 
