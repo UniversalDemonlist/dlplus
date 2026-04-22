@@ -366,6 +366,7 @@ function setupSearchBar() {
 }
 
 function getPlayerHardestDemon(playerName) {
+  const key = normalizeName(playerName);
   let hardest = null;
 
   globalDemons.forEach(demon => {
@@ -376,10 +377,10 @@ function getPlayerHardestDemon(playerName) {
         ? { user: r, percent: 100 }
         : { user: r.user, percent: r.percent || 100 };
 
-      if (record.user === playerName && record.percent === 100) beaten = true;
+      if (normalizeName(record.user) === key && record.percent === 100) beaten = true;
     });
 
-    if (demon.verifier === playerName) beaten = true;
+    if (normalizeName(demon.verifier) === key) beaten = true;
 
     if (beaten) {
       if (!hardest || demon.position < hardest.position) hardest = demon;
@@ -390,6 +391,8 @@ function getPlayerHardestDemon(playerName) {
 }
 
 function getPlayerStats(playerName) {
+  const key = normalizeName(playerName);
+
   let main = 0;
   let extended = 0;
   let legacy = 0;
@@ -406,12 +409,12 @@ function getPlayerStats(playerName) {
         ? { user: r, percent: 100 }
         : { user: r.user, percent: r.percent || 100 };
 
-      if (record.user === playerName && record.percent === 100) {
+      if (normalizeName(record.user) === key && record.percent === 100) {
         isCompleted = true;
       }
     });
 
-    if (demon.verifier === playerName) {
+    if (normalizeName(demon.verifier) === key) {
       isCompleted = true;
       verified.push(demon);
     }
@@ -424,9 +427,9 @@ function getPlayerStats(playerName) {
       else legacy++;
     }
 
-    if (Array.isArray(demon.creators) && demon.creators.includes(playerName)) {
+    if (Array.isArray(demon.creators) && demon.creators.some(c => normalizeName(c) === key)) {
       created.push(demon);
-    } else if (demon.creators === playerName) {
+    } else if (normalizeName(demon.creators) === key) {
       created.push(demon);
     }
   });
@@ -520,7 +523,7 @@ function openPlayerPage(playerName, scores) {
     .map(d => `<li>#${d.position} — ${d.name}</li>`)
     .join("");
 
-  const score = scores[playerName] || 0;
+  const score = scores[normalizeName(playerName)] || scores[playerName] || 0;
 
   container.innerHTML = `
     <div class="player-profile">
@@ -579,7 +582,6 @@ function loadLeaderboard() {
   for (let i = 0; i < 6; i++) container.appendChild(createPlaceholderPlayer());
 
   setTimeout(() => {
-    const scores = {};
     const playerMap = new Map();
 
     globalDemons.forEach(demon => {
@@ -599,9 +601,10 @@ function loadLeaderboard() {
       });
     });
 
-    const allPlayers = Array.from(playerMap.values());
-
-    allPlayers.forEach(name => scores[name] = 0);
+    const scores = {};
+    playerMap.forEach((display, key) => {
+      scores[key] = 0;
+    });
 
     globalDemons.forEach(demon => {
       if (demon.position > 150) return;
@@ -618,17 +621,15 @@ function loadLeaderboard() {
 
         if (record.percent >= demon.percentToQualify) {
           const key = normalizeName(p);
-          const display = playerMap.get(key) || p;
           const earned = record.percent === 100 ? baseScore : baseScore * (record.percent / 100);
-          scores[display] += earned;
+          if (scores[key] !== undefined) scores[key] += earned;
         }
       });
 
       const verifier = demon.verifier;
       if (verifier && !bannedPlayers.includes(verifier)) {
         const key = normalizeName(verifier);
-        const display = playerMap.get(key) || verifier;
-        scores[display] += baseScore;
+        if (scores[key] !== undefined) scores[key] += baseScore;
       }
     });
 
@@ -638,17 +639,31 @@ function loadLeaderboard() {
     const filterMode = document.getElementById("leaderboard-filter")?.value || "points";
 
     let sorted = Object.entries(scores)
-      .filter(([name, score]) => score > 0 && name.toLowerCase().includes(searchQuery))
-      .map(([name, score]) => {
+      .filter(([key, score]) => score > 0)
+      .map(([key, score]) => {
+        const name = playerMap.get(key);
         const hardest = getPlayerHardestDemon(name);
         const t = getPlayerTier(hardest);
-        return { name, score, tier: t.tier || 0 };
-      });
+        return {
+          key,
+          name,
+          score,
+          tier: t.tier || 0,
+          segment: t.segment
+        };
+      })
+      .filter(p => p.name.toLowerCase().includes(searchQuery));
+
+    const segmentRank = { High: 3, Mid: 2, Low: 1, Unranked: 0 };
 
     if (filterMode === "points") {
       sorted.sort((a, b) => b.score - a.score);
     } else if (filterMode === "tier") {
-      sorted.sort((a, b) => b.tier - a.tier || b.score - a.score);
+      sorted.sort((a, b) =>
+        b.tier - a.tier ||
+        segmentRank[b.segment] - segmentRank[a.segment] ||
+        b.score - a.score
+      );
     }
 
     container.innerHTML = "";
