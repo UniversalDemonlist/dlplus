@@ -6,6 +6,7 @@ let extendedList = [];
 let legacyList = [];
 let bannedPlayers = [];
 window._leaderboardScores = {};
+window._playerMap = new Map();
 
 function normalizeName(name) {
   return name.trim().toLowerCase();
@@ -484,7 +485,7 @@ function createPlayerCard(name, score, rank) {
 
   card.appendChild(info);
 
-  card.addEventListener("click", () => openPlayerPage(name, window._leaderboardScores));
+  card.addEventListener("click", () => openPlayerPage(normalizeName(name), window._leaderboardScores));
 
   return card;
 }
@@ -525,7 +526,7 @@ function openPlayerPage(key, scores) {
     .map(d => `<li>#${d.position} — ${d.name}</li>`)
     .join("");
 
-  const score = scores[normalizeName(playerName)] || scores[playerName] || 0;
+  const score = scores[key] || 0;
 
   container.innerHTML = `
     <div class="player-profile">
@@ -603,6 +604,8 @@ function loadLeaderboard() {
       });
     });
 
+    window._playerMap = playerMap;
+
     const scores = {};
     playerMap.forEach((display, key) => {
       scores[key] = 0;
@@ -645,50 +648,4 @@ function loadLeaderboard() {
       .map(([key, score]) => {
         const name = playerMap.get(key);
         const hardest = getPlayerHardestDemon(name);
-        const t = getPlayerTier(hardest);
-        return {
-          key,
-          name,
-          score,
-          tier: t.tier || 0,
-          segment: t.segment
-        };
-      })
-      .filter(p => p.name.toLowerCase().includes(searchQuery));
-
-    const segmentRank = { High: 3, Mid: 2, Low: 1, Unranked: 0 };
-
-    if (filterMode === "points") {
-      sorted.sort((a, b) => b.score - a.score);
-    } else if (filterMode === "tier") {
-      sorted.sort((a, b) =>
-        b.tier - a.tier ||
-        segmentRank[b.segment] - segmentRank[a.segment] ||
-        b.score - a.score
-      );
-    }
-
-    container.innerHTML = "";
-
-    sorted.forEach((p, index) => {
-      container.appendChild(createPlayerCard(p.name, p.score, index + 1));
-    });
-
-    if (sorted.length === 0) {
-      container.innerHTML = "<p>No players with scores yet.</p>";
-    }
-  }, 500);
-}
-
-function showInitialPlaceholders() {
-  const demonContainer = document.getElementById("demon-container");
-  const leaderboardContainer = document.getElementById("leaderboard-container");
-  if (demonContainer) {
-    demonContainer.innerHTML = "";
-    for (let i = 0; i < 6; i++) demonContainer.appendChild(createPlaceholderCard());
-  }
-  if (leaderboardContainer) {
-    leaderboardContainer.innerHTML = "";
-    for (let i = 0; i < 6; i++) leaderboardContainer.appendChild(createPlaceholderPlayer());
-  }
-}
+        const t = getPlayerTier(h
