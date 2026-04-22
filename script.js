@@ -7,12 +7,17 @@ let legacyList = [];
 let bannedPlayers = [];
 window._leaderboardScores = {};
 
+function normalizeName(name) {
+  return name.trim().toLowerCase();
+}
+
 document.addEventListener("DOMContentLoaded", () => {
   setupTabs();
   setupThemeToggle();
   loadEverything();
   setupSearchBar();
   setupDropdownSelects();
+  setupPlayerSearch();
 });
 
 function setupThemeToggle() {
@@ -549,6 +554,21 @@ function openPlayerPage(playerName, scores) {
   window.scrollTo({ top: 0, behavior: "smooth" });
 }
 
+function setupPlayerSearch() {
+  const input = document.getElementById("player-search");
+  const select = document.getElementById("leaderboard-filter");
+  if (input) {
+    input.addEventListener("input", () => {
+      loadLeaderboard();
+    });
+  }
+  if (select) {
+    select.addEventListener("change", () => {
+      loadLeaderboard();
+    });
+  }
+}
+
 function loadLeaderboard() {
   stopAllVideos();
 
@@ -560,22 +580,26 @@ function loadLeaderboard() {
 
   setTimeout(() => {
     const scores = {};
-    const playerSet = new Set();
+    const playerMap = new Map();
 
     globalDemons.forEach(demon => {
-      if (demon.verifier && !bannedPlayers.includes(demon.verifier)) playerSet.add(demon.verifier);
+      if (demon.verifier && !bannedPlayers.includes(demon.verifier)) {
+        const key = normalizeName(demon.verifier);
+        if (!playerMap.has(key)) playerMap.set(key, demon.verifier);
+      }
       demon.records.forEach(r => {
         const record = typeof r === "string"
           ? { user: r, percent: 100 }
           : { user: r.user, percent: r.percent || 100 };
 
         if (record.user && record.user !== "Not beaten yet" && !bannedPlayers.includes(record.user)) {
-          playerSet.add(record.user);
+          const key = normalizeName(record.user);
+          if (!playerMap.has(key)) playerMap.set(key, record.user);
         }
       });
     });
 
-    const allPlayers = Array.from(playerSet);
+    const allPlayers = Array.from(playerMap.values());
 
     allPlayers.forEach(name => scores[name] = 0);
 
@@ -593,27 +617,44 @@ function loadLeaderboard() {
         if (!p || p === "Not beaten yet" || bannedPlayers.includes(p)) return;
 
         if (record.percent >= demon.percentToQualify) {
+          const key = normalizeName(p);
+          const display = playerMap.get(key) || p;
           const earned = record.percent === 100 ? baseScore : baseScore * (record.percent / 100);
-          scores[p] += earned;
+          scores[display] += earned;
         }
       });
 
       const verifier = demon.verifier;
       if (verifier && !bannedPlayers.includes(verifier)) {
-        scores[verifier] += baseScore;
+        const key = normalizeName(verifier);
+        const display = playerMap.get(key) || verifier;
+        scores[display] += baseScore;
       }
     });
 
     window._leaderboardScores = scores;
 
-    const sorted = Object.entries(scores)
-      .filter(([name, score]) => score > 0)
-      .sort((a, b) => b[1] - a[1]);
+    const searchQuery = document.getElementById("player-search")?.value.toLowerCase() || "";
+    const filterMode = document.getElementById("leaderboard-filter")?.value || "points";
+
+    let sorted = Object.entries(scores)
+      .filter(([name, score]) => score > 0 && name.toLowerCase().includes(searchQuery))
+      .map(([name, score]) => {
+        const hardest = getPlayerHardestDemon(name);
+        const t = getPlayerTier(hardest);
+        return { name, score, tier: t.tier || 0 };
+      });
+
+    if (filterMode === "points") {
+      sorted.sort((a, b) => b.score - a.score);
+    } else if (filterMode === "tier") {
+      sorted.sort((a, b) => b.tier - a.tier || b.score - a.score);
+    }
 
     container.innerHTML = "";
 
-    sorted.forEach(([name, score], index) => {
-      container.appendChild(createPlayerCard(name, score, index + 1));
+    sorted.forEach((p, index) => {
+      container.appendChild(createPlayerCard(p.name, p.score, index + 1));
     });
 
     if (sorted.length === 0) {
