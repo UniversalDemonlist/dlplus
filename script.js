@@ -81,7 +81,15 @@ async function loadDemonList() {
   );
 
   globalDemons = demonFiles
-    .map((d, i) => (d ? { ...d, position: i + 1 } : null))
+    .map((d, i) => {
+      if (!d) return null;
+      const name = d.name?.toLowerCase() || "";
+
+      if (methodList.map(x => x.toLowerCase()).includes(name)) d.warning = "method";
+      if (pathList.map(x => x.toLowerCase()).includes(name)) d.warning = "path";
+
+      return { ...d, position: i + 1 };
+    })
     .filter(Boolean);
 
   mainList = globalDemons.filter(d => d.position <= 75);
