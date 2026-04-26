@@ -313,6 +313,22 @@ function openDemonPage(demon) {
     ? `<div class="fancy-video-wrap"><iframe src="${iframeSrc}" allowfullscreen></iframe></div>`
     : `<div class="fancy-video-wrap"><img src="${thumb}"></div>`;
 
+  let warningHTML = "";
+  if (demon.warning === "method") {
+    warningHTML = `
+      <div class="warning-box">
+        THIS LEVEL ACCEPTS RECORDS ONLY USING THE METHOD USED IN THE VERIFICATION
+      </div>
+    `;
+  }
+  if (demon.warning === "path") {
+    warningHTML = `
+      <div class="warning-box">
+        THIS LEVEL ACCEPTS RECORDS ONLY USING THE PATH USED IN THE VERIFICATION
+      </div>
+    `;
+  }
+
   const validRecords = demon.records
     .map(r =>
       typeof r === "string"
@@ -337,6 +353,7 @@ function openDemonPage(demon) {
         <p><strong>Verifier:</strong> ${demon.verifier}</p>
         <p><strong>Tier:</strong> ${getTier(demon.position)}</p>
         <p><strong>Score Value:</strong> ${score.toFixed(2)}</p>
+        ${warningHTML}
       </div>
     </div>
 
@@ -351,6 +368,7 @@ function openDemonPage(demon) {
   document.getElementById("demon-page").classList.add("active");
   window.scrollTo({ top: 0, behavior: "smooth" });
 }
+
 
 function setupSearchBar() {
   const input = document.getElementById("search-bar");
