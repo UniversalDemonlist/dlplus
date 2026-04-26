@@ -8,6 +8,7 @@
     "percentToQualify": 57,
     "password": "Not Copyable",
     "description": "Spam challenge, which is only possible with rake clicking.",
+    "warning": "method",
     "records": [
         {
             "user": "Not beaten yet",
