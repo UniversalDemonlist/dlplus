@@ -292,3 +292,15 @@ body.dark .placeholder-player {
     height: 240px;
   }
 }
+
+.warning-box {
+  background: #ff8800;
+  color: white;
+  padding: 10px 14px;
+  border-radius: 6px;
+  font-weight: 700;
+  text-align: center;
+  margin-top: 10px;
+  font-size: 15px;
+}
+
