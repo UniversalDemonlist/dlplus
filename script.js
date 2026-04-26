@@ -5,6 +5,8 @@ let mainList = [];
 let extendedList = [];
 let legacyList = [];
 let bannedPlayers = [];
+let methodList = [];
+let pathList = [];
 window._leaderboardScores = {};
 window._playerMap = new Map();
 
