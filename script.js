@@ -85,10 +85,12 @@ async function loadDemonList() {
   globalDemons = demonFiles
     .map((d, i) => {
       if (!d) return null;
-      const name = d.name?.toLowerCase() || "";
 
-      if (methodList.map(x => x.toLowerCase()).includes(name)) d.warning = "method";
-      if (pathList.map(x => x.toLowerCase()).includes(name)) d.warning = "path";
+      const fileName = list[i];
+      const baseName = fileName.replace(/\.json$/i, "");
+
+      if (methodList.includes(baseName)) d.warning = "method";
+      if (pathList.includes(baseName)) d.warning = "path";
 
       return { ...d, position: i + 1 };
     })
