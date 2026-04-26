@@ -36,6 +36,8 @@ async function loadEverything() {
   showInitialPlaceholders();
   setTimeout(async () => {
     bannedPlayers = await fetch("data/banned.json").then(r => r.json()).catch(() => []);
+    methodList = await fetch("data/method.json").then(r => r.json()).catch(() => []);
+    pathList = await fetch("data/path.json").then(r => r.json()).catch(() => []);
     await loadDemonList();
   }, 200);
 }
