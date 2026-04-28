@@ -304,3 +304,29 @@ body.dark .placeholder-player {
   font-size: 15px;
 }
 
+#old-notice {
+  background: #ff8800;
+  color: white;
+  padding: 12px 16px;
+  border-radius: 6px;
+  font-weight: 700;
+  text-align: center;
+  margin: 20px 0;
+  font-size: 15px;
+}
+
+#old-notice-btn {
+  background: white;
+  color: #ff8800;
+  border: none;
+  padding: 6px 12px;
+  border-radius: 4px;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+#old-notice-btn:hover {
+  opacity: 0.8;
+}
+
+
