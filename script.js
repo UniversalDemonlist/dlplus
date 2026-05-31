@@ -97,8 +97,8 @@ async function loadDemonList() {
     .filter(Boolean);
 
   mainList = globalDemons.filter(d => d.position <= 75);
-  extendedList = globalDemons.filter(d => d.position > 75 && d.position <= 150);
-  legacyList = globalDemons.filter(d => d.position > 150);
+  extendedList = globalDemons.filter(d => d.position > 75 && d.position <= 100);
+  legacyList = globalDemons.filter(d => d.position > 100);
 
   renderDemonCards();
   populateDropdowns();
@@ -113,7 +113,7 @@ function renderDemonCards(listOverride) {
   container.innerHTML = "";
   for (let i = 0; i < 6; i++) container.appendChild(createPlaceholderCard());
 
-  const list = listOverride || globalDemons.filter(d => d.position <= 150);
+  const list = listOverride || globalDemons.filter(d => d.position <= 100);
 
   setTimeout(() => {
     container.innerHTML = "";
