@@ -333,4 +333,26 @@ body.dark .placeholder-player {
   opacity: 0.8;
 }
 
+.fancy-demon-header {
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  padding: 20px;
+  border-radius: 10px;
+  position: relative;
+  color: white;
+}
+
+.fancy-demon-header::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: rgba(0,0,0,0.55);
+  z-index: 0;
+}
+
+.fancy-demon-header * {
+  position: relative;
+  z-index: 1;
+}
 
