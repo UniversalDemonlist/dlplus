@@ -323,6 +323,12 @@ function openDemonPage(demon) {
     getYoutubeThumbnail(demon.verification) ||
     "https://via.placeholder.com/300x170?text=No+Preview";
 
+  const bg =
+    demon.background ||
+    demon.thumbnail ||
+    getYoutubeThumbnail(demon.verification) ||
+    "";
+
   const creators = Array.isArray(demon.creators)
     ? demon.creators.join(", ")
     : demon.creators || "Unknown";
@@ -367,7 +373,7 @@ function openDemonPage(demon) {
     .join("");
 
   container.innerHTML = `
-    <div class="fancy-demon-header">
+    <div class="fancy-demon-header" style="background-image:url('${bg}')">
       <h1>#${demon.position} — ${demon.name}</h1>
       ${demon.description ? `<p class="fancy-desc">${demon.description}</p>` : ""}
       <div class="fancy-meta-box">
