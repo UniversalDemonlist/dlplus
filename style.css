@@ -356,3 +356,24 @@ body.dark .placeholder-player {
   z-index: 1;
 }
 
+.demon-info {
+  position: relative;
+  overflow: hidden;
+}
+
+.demon-info::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background-image: var(--card-bg);
+  background-size: cover;
+  background-position: center;
+  opacity: 0.5;
+  z-index: 0;
+}
+
+.demon-info > * {
+  position: relative;
+  z-index: 1;
+}
+
