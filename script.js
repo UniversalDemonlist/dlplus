@@ -255,6 +255,14 @@ function createDemonCard(demon) {
   const card = document.createElement("div");
   card.className = "demon-card";
 
+  const bg =
+    demon.background ||
+    demon.thumbnail ||
+    getYoutubeThumbnail(demon.verification) ||
+    "";
+
+  card.style.setProperty("--card-bg", `url('${bg}')`);
+
   const img = document.createElement("img");
   img.src =
     (demon.thumbnail && demon.thumbnail.trim()) ||
@@ -263,14 +271,6 @@ function createDemonCard(demon) {
 
   const info = document.createElement("div");
   info.className = "demon-info";
-
-  const bg =
-    demon.background ||
-    demon.thumbnail ||
-    getYoutubeThumbnail(demon.verification) ||
-    "";
-
-  info.style.setProperty("--card-bg", `url('${bg}')`);
 
   const score = demon.position <= 150 ? 350 / Math.sqrt(demon.position) : 0;
 
@@ -289,6 +289,7 @@ function createDemonCard(demon) {
 
   return card;
 }
+
 
 
 function createPlaceholderCard() {
