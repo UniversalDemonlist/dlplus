@@ -264,6 +264,14 @@ function createDemonCard(demon) {
   const info = document.createElement("div");
   info.className = "demon-info";
 
+  const bg =
+    demon.background ||
+    demon.thumbnail ||
+    getYoutubeThumbnail(demon.verification) ||
+    "";
+
+  info.style.setProperty("--card-bg", `url('${bg}')`);
+
   const score = demon.position <= 150 ? 350 / Math.sqrt(demon.position) : 0;
 
   info.innerHTML = `
@@ -281,6 +289,7 @@ function createDemonCard(demon) {
 
   return card;
 }
+
 
 function createPlaceholderCard() {
   const card = document.createElement("div");
