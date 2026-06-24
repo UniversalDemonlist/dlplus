@@ -377,3 +377,24 @@ body.dark .placeholder-player {
   z-index: 1;
 }
 
+.demon-card {
+  position: relative;
+  overflow: hidden;
+}
+
+.demon-card::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background-image: var(--card-bg);
+  background-size: cover;
+  background-position: center;
+  opacity: 0.5; /* 50% transparency */
+  z-index: 0;
+}
+
+.demon-card > * {
+  position: relative;
+  z-index: 1;
+}
+
