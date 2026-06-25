@@ -113,7 +113,7 @@ function renderDemonCards(listOverride) {
   container.innerHTML = "";
   for (let i = 0; i < 6; i++) container.appendChild(createPlaceholderCard());
 
-  const list = listOverride || globalDemons
+  const list = listOverride || globalDemons.filter(d => d.position <= 100);
 
   setTimeout(() => {
     container.innerHTML = "";
@@ -744,4 +744,3 @@ function showInitialPlaceholders() {
     for (let i = 0; i < 6; i++) leaderboardContainer.appendChild(createPlaceholderPlayer());
   }
 }
-
