@@ -53,6 +53,7 @@ async function loadEverything() {
     methodList = await fetch("data/method.json").then(r => r.json()).catch(() => []);
     pathList = await fetch("data/path.json").then(r => r.json()).catch(() => []);
     cheatedList = await fetch("data/cheated.json").then(r => r.json()).catch(() => []);
+      cheatedList = cheatedList.map(x => x.toLowerCase());
     await loadDemonList();
   }, 200);
 }
