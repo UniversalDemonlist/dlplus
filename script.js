@@ -753,4 +753,10 @@ function cleanDisplayName(name) {
   if (typeof name !== "string") return "";
   return name.replace("[c]", "").replace("[C]", "").trim();
 }
+document.getElementById("toggle-cheated").addEventListener("click", () => {
+  hideCheated = !hideCheated;
+  loadLeaderboard();
+  renderDemonCards();
+});
+
 
