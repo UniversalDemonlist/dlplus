@@ -7,6 +7,9 @@ let legacyList = [];
 let bannedPlayers = [];
 let methodList = [];
 let pathList = [];
+let cheatedList = [];
+let hideCheated = false;
+
 window._leaderboardScores = {};
 window._playerMap = new Map();
 
