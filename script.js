@@ -83,6 +83,7 @@ function setupTabs() {
     });
   });
 }
+
 async function loadDemonList() {
   const list = await fetch("data/list.json").then(r => r.json());
   const demonFiles = await Promise.all(
