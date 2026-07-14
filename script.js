@@ -525,7 +525,7 @@ function createPlayerCard(name, score, rank) {
     : `<span style="color:#888; font-weight:600;">Unranked</span>`;
 
   info.innerHTML = `
-    <h2>#${rank} — ${name}</h2>
+  <h2>#${rank} — ${cleanDisplayName(name)}</h2>
     <p><strong>Score:</strong> ${score.toFixed(2)}</p>
     <p><strong>Player Tier:</strong> ${tierHtml}</p>
     <p><strong>Title:</strong> ${title}</p>
