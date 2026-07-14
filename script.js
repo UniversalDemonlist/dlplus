@@ -580,7 +580,7 @@ function openPlayerPage(key, scores) {
   container.innerHTML = `
     <div class="player-profile">
       <div class="player-profile-header">
-        <h1>${playerName}</h1>
+      <h1>${cleanDisplayName(playerName)}</h1>
         <p><strong>Score:</strong> ${score.toFixed(2)}</p>
         <p><strong>Player Tier:</strong> ${tierHtml}</p>
         <p><strong>Title:</strong> ${title}</p>
