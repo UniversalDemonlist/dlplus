@@ -131,9 +131,9 @@ function renderDemonCards(listOverride) {
 
   let list = listOverride || globalDemons.filter(d => d.position <= 100);
 
-  if (hideCheated) {
-    list = list.filter(d => !cheatedList.includes(d.name.toLowerCase()));
-  }
+if (hideCheated) {
+  list = list.filter(d => !cheatedList.includes(d.id.toLowerCase()));
+}
 
   setTimeout(() => {
     container.innerHTML = "";
