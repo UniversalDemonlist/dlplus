@@ -83,6 +83,54 @@ function setupTabs() {
     });
   });
 }
+async function loadDemonList() {
+  const list = await fetch("data/list.json").then(r => r.json());
+  const demonFiles = await Promise.all(
+    list.map(id =>
+      fetch(`data/demons/${id}.json`)
+        .then(r => (r.ok ? r.json() : null))
+        .catch(() => null)
+    )
+  );
+
+  globalDemons = demonFiles
+    .map((d, i) => {
+      if (!d) return null;
+      const fileName = list[i];
+      const baseName = fileName.replace(/\.json$/i, "");
+      if (methodList.includes(baseName)) d.warning = "method";
+      if (pathList.includes(baseName)) d.warning = "path";
+      return { ...d, position: i + 1 };
+    })
+    .filter(Boolean);
+
+  mainList = globalDemons.filter(d => d.position <= 75);
+  extendedList = globalDemons.filter(d => d.position > 75 && d.position <= 100);
+  legacyList = globalDemons.filter(d => d.position > 100);
+
+  renderDemonCards();
+  populateDropdowns();
+  loadLeaderboard();
+}
+
+function setupDropdownSelects() {
+  function attach(select, list) {
+    if (!select) return;
+    select.addEventListener("change", () => {
+      stopAllVideos();
+      const pos = Number(select.value);
+      if (!pos) return;
+      const demon = list.find(d => d.position === pos);
+      if (demon) openDemonPage(demon);
+      select.value = "";
+    });
+  }
+
+  attach(document.getElementById("select-main"), mainList);
+  attach(document.getElementById("select-extended"), extendedList);
+  attach(document.getElementById("select-legacy"), legacyList);
+}
+
 function getPlayerStats(playerName) {
   const key = normalizeName(playerName);
 
