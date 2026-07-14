@@ -744,3 +744,9 @@ function showInitialPlaceholders() {
     for (let i = 0; i < 6; i++) leaderboardContainer.appendChild(createPlaceholderPlayer());
   }
 }
+
+function cleanDisplayName(name) {
+  if (typeof name !== "string") return "";
+  return name.replace("[c]", "").replace("[C]", "").trim();
+}
+
