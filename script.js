@@ -12,15 +12,11 @@ window._playerMap = new Map();
 
 function normalizeName(name) {
   if (typeof name !== "string") return "";
-
-  return name
-    .replace(/
+  return name.replace(/
 
 \[c\]
 
-/gi, "")
-    .trim()
-    .toLowerCase();
+/gi, "").trim().toLowerCase();
 }
 
 document.addEventListener("DOMContentLoaded", () => {
