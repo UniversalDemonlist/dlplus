@@ -3,8 +3,8 @@
     "name": "Black Hammer",
     "author": "squeeg",
     "creators": ["Squeeg"],
-    "verifier": "Squeeg",
-    "verification": "https://youtu.be/JTrudveULkI",
+    "verifier": "Carter",
+    "verification": "https://youtu.be/LLKfAuDAnDQ?si=CuPND40F_IQdJVxD",
     "percentToQualify": 57,
     "password": "Not Copyable",
     "records": [
@@ -13,8 +13,6 @@
             "link": "https://www.youtube.com/watch?v=wZwCXjVdqz0",
             "percent": 1,
             "hz": 360
-        },
-        "G1rcy",
-         "PowerGreen"
+        }
     ]
 }
