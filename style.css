@@ -380,3 +380,11 @@ body.dark .placeholder-player {
   position: relative;
   z-index: 1;
 }
+
+.tabs-logo {
+  height: 36px;
+  width: auto;
+  object-fit: contain;
+  flex-shrink: 0;
+}
+
